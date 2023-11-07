@@ -2,8 +2,7 @@
 import { useState } from 'react'
 
 // Component Imports
-import { CredentialResponse } from '@react-oauth/google';
-import { GoogleLogin } from '@react-oauth/google'
+import SignIn from './component/SignIn';
 
 // Local Imports
 import './App.css'
@@ -12,12 +11,6 @@ import reactLogo from './assets/react.svg'
 
 function App() {
   const [count, setCount] = useState(0)
-  const gLoginSuccess = (response: CredentialResponse) => {
-    console.log(response);
-  }
-  const gLoginError = () => {
-      console.log('An error occurred.');
-  }
 
   return (
     <>
@@ -41,7 +34,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <GoogleLogin onSuccess={gLoginSuccess} onError={gLoginError} />
+      <SignIn />
     </>
   )
 }
