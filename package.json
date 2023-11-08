@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.17",
     "@react-oauth/google": "^0.11.1",
+    "@types/firebase": "^3.2.1",
     "firebase": "^10.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

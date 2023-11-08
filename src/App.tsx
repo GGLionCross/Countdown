@@ -1,15 +1,15 @@
-// Component Imports
-import SignIn from './component/SignIn';
+// Component ImportsGoogleL
+import LoginCard from './component/LoginCard'
 
 // Local Imports
 import './App.css'
 
 function App() {
-  return (
-    <>
-      <SignIn />
-    </>
-  )
+    return (
+        <>
+            <LoginCard />
+        </>
+    )
 }
 
 export default App
