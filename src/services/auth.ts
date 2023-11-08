@@ -1,12 +1,12 @@
-// React Imports
+// React
 import { useState, useEffect } from 'react';
 
-// Firebase Imports
+// Firebase
 import {
-    GoogleAuthProvider,
-    signInWithCredential,
+    getAuth,
     onAuthStateChanged,
-    User
+    User,
+    UserCredential
 } from "firebase/auth";
 import {
     ref,
@@ -15,65 +15,63 @@ import {
 } from 'firebase/database';
 
 // Local Imports
-import { auth, database } from "./firebase";
+import { database } from "./firebase";
 
-// Share success handlers between sign-in methods
-const signInWithGoogleToken = async (token: string | undefined) => {
-    const credential = GoogleAuthProvider.credential(token);
-    const result = await signInWithCredential(auth, credential);
-
-    // Safe navigation in case credential is null
-    //? const token = credential?.accessToken;
-
-    if (result) {
-        // The signed-in user info.
-        const user = result.user;
-        const userRef = ref(database, 'users/' + user.uid);
-
-        get(userRef).then((snapshot) => {
-            if (snapshot.exists()) {
-                // User exists within the 'users' table
-                console.log(`Returning user <${user.email}> logged in.`);
-
-                // User data to be updated in our table
-                const userData = {
-                    pfp_url: user.photoURL, // User's profile picture URL
-                };
-
-                update(userRef, userData);
-
-            } else {
-                // User does not exist in the 'users' table, so create a new record
-                console.log(`New user <${user.email}> logged in.`);
-
-                // User data to be saved in our table
-                const userData = {
-                    email: user.email, // User's email address
-                    pfp_url: user.photoURL, // User's profile picture URL
-                    joined: serverTimestamp(), // Use Firebase server timestamp
-                };
-
-                set(userRef, userData);
-            }
-        }); // End of get(userRef).then()
-    }
-}
-
+// Hook for observing authentication changes in app
 const useAuth = () => {
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true); // Useful for loading states
 
     useEffect(() => {
-        // Use the existing auth instance from firebase.ts
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
-            setIsLoading(false);
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
         });
 
+        // Cleanup subscription
         return unsubscribe;
     }, []);
 
-    return { currentUser, isLoading };
+    return { user, loading };
 }
 
-export { signInWithGoogleToken, useAuth }
+// Share success handlers between sign-in methods
+const handleAuthResponse = (response: UserCredential) => {
+    // The signed-in user info.
+    const user = response.user;
+    const userRef = ref(database, 'users/' + user.uid);
+
+    get(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            // User exists within the 'users' table
+            console.log(`Returning user <${user.email}> logged in.`);
+            console.log(snapshot);
+
+            // If user has changed their profile pic, update the URL
+            if (snapshot.val().photoURL != user.photoURL) {
+                // User data to be updated in our table
+                const userData = {
+                    photoURL: user.photoURL, // User's profile picture URL
+                };
+
+                update(userRef, userData);
+            }
+
+        } else {
+            // User does not exist in the 'users' table, so create a new record
+            console.log(`New user <${user.email}> logged in.`);
+
+            // User data to be saved in our table
+            const userData = {
+                email: user.email, // User's email address
+                photoURL: user.photoURL, // User's profile picture URL
+                joined: serverTimestamp(), // Use Firebase server timestamp
+            };
+
+            set(userRef, userData);
+        }
+    }); // End of get(userRef).then()
+}
+
+export { useAuth, handleAuthResponse }

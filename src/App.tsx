@@ -1,15 +1,11 @@
 // Component ImportsGoogleL
-import LoginCard from './component/LoginCard'
+import AppRouter from './routes/AppRouter';
 
 // Local Imports
 import './App.css'
 
 function App() {
-    return (
-        <>
-            <LoginCard />
-        </>
-    )
+    return <AppRouter />
 }
 
 export default App
