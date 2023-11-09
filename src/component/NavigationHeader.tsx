@@ -1,4 +1,5 @@
-import { AppBar, Box, Button, Divider } from '@mui/material';
+// Components
+import { AppBar, Box, Divider } from '@mui/material';
 import UserAvatar from './UserAvatar';
 
 export default function NavigationHeader() {
@@ -9,9 +10,7 @@ export default function NavigationHeader() {
                 <Box></Box>
                 <Box display="flex" alignItems="center" gap={1} sx={{ p: 1 }}>
                     <Divider orientation="vertical" sx={{ py: 3 }} />
-                    <Button>
-                        <UserAvatar />
-                    </Button>
+                    <UserAvatar />
                 </Box>
             </Box>
         </AppBar>

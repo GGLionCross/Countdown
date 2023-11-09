@@ -2,11 +2,12 @@
 import { useState, useEffect } from 'react';
 
 // Firebase
+import { auth } from './firebase';
 import {
-    getAuth,
     onAuthStateChanged,
     User,
-    UserCredential
+    UserCredential,
+    signOut
 } from "firebase/auth";
 import {
     ref,
@@ -18,12 +19,11 @@ import {
 import { database } from "./firebase";
 
 // Hook for observing authentication changes in app
-const useAuth = () => {
+export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true); // Useful for loading states
 
     useEffect(() => {
-        const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
@@ -37,7 +37,7 @@ const useAuth = () => {
 }
 
 // Share success handlers between sign-in methods
-const handleAuthResponse = (response: UserCredential) => {
+export const handleAuthResponse = (response: UserCredential) => {
     // The signed-in user info.
     const user = response.user;
     const userRef = ref(database, 'users/' + user.uid);
@@ -74,4 +74,8 @@ const handleAuthResponse = (response: UserCredential) => {
     }); // End of get(userRef).then()
 }
 
-export { useAuth, handleAuthResponse }
+export const handleSignOut = () => {
+    signOut(auth).catch((error) => {
+        console.error('Error signing out: ', error);
+    });
+}
