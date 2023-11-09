@@ -1,10 +1,12 @@
 // Component ImportsGoogleL
-import LoginCard from '../component/LoginCard'
+import NavigationHeader from '../component/NavigationHeader';
+import SignInCard from '../component/SignInCard'
 
-export default function LoginPage() {
+export default function ViewControllerPage() {
     return (
         <>
-            <LoginCard />
+            <NavigationHeader />
+            <SignInCard />
             <div>User is logged in</div>
         </>
     )

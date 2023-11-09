@@ -7,10 +7,10 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import Login from './Login';
+import SignInForm from './SignInForm';
 
-// This function is responsible for structuring the Login components.
-function LoginCard() {
+// This function is responsible for structuring the SignIn components.
+export default function SignInCard() {
     return (
         <Card>
             <CardContent>
@@ -27,11 +27,9 @@ function LoginCard() {
                         }}
                     />
                     <Divider variant="middle" />
-                    <Login />
+                    <SignInForm />
                 </Stack>
             </CardContent>
         </Card>
     )
 }
-
-export default LoginCard;

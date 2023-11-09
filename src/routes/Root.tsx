@@ -2,7 +2,7 @@
 import { useAuth } from '../services/auth';
 
 // Pages
-import LoginPage from '../pages/LoginPage';
+import SignInPage from '../pages/SignInPage';
 import ViewControllerPage from '../pages/ViewControllerPage';
 
 export default function Root() {
@@ -10,6 +10,6 @@ export default function Root() {
     if (user) {
         return <ViewControllerPage/>;
     } else {
-        return <LoginPage />;
+        return <SignInPage />;
     }
 }

@@ -10,7 +10,7 @@ import {
 import { auth } from '../services/firebase';
 import { handleAuthResponse } from '../services/auth';
 
-function Login() {
+export default function SignInForm() {
     const handleSuccess = async (response: CredentialResponse) => {
         console.log(response);
         const credential = GoogleAuthProvider.credential(response.credential);
@@ -31,5 +31,3 @@ function Login() {
         <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
     )
 }
-
-export default Login
