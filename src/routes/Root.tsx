@@ -2,13 +2,19 @@
 import { useAuth } from '../services/auth';
 
 // Pages
+import NavigationHeader from '../component/NavigationHeader';
 import SignInPage from '../pages/SignInPage';
 import ViewControllerPage from '../pages/ViewControllerPage';
 
 export default function Root() {
     const { user } = useAuth();
     if (user) {
-        return <ViewControllerPage/>;
+        return (
+            <>
+                <NavigationHeader title='Views' />
+                <ViewControllerPage/>
+            </>
+        );
     } else {
         return <SignInPage />;
     }
