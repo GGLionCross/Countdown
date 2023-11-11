@@ -1,16 +1,22 @@
 import { useEffect, useState} from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 import { app } from '../services/firebase';
 
 import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useThemeProps } from '@mui/material';
 
+interface GoogleFontsAutocompleteProps {
+    font: string;
+    setFont: Dispatch<SetStateAction<string>>;
+}
 interface Font {
     family: string;
 }
 
-export default function GoogleFontsAutocomplete() {
+export default function GoogleFontsAutocomplete(props: GoogleFontsAutocompleteProps) {
     const [fonts, setFonts] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -28,10 +34,16 @@ export default function GoogleFontsAutocomplete() {
             });
     }, []);
 
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        props.setFont(event.target.value);
+    }
+
     const renderInput = (params: AutocompleteRenderInputParams) => (
         <TextField
             {...params}
             label='Font'
+            value={props.font}
+            onChange={onChange}
             variant='outlined'
             size='small'
             InputProps={{

@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import UploadFileField from "./UploadFileField";
 import GoogleFontsAutocomplete from "./GoogleFontsAutocomplete";
+import ColorPicker from "./ColorPicker";
 
 interface EditViewProps {
     show: boolean;
@@ -35,10 +36,11 @@ export default function EditView(props: EditViewProps) {
         // elevation: 2
     }
     const [filename, setFilename] = useState('');
+    const [font, setFont] = useState('');
 
     return (
         <Slide in={props.show} direction='up' mountOnEnter unmountOnExit>
-            <Paper sx={footerStyle}>
+            <Paper elevation={4} sx={footerStyle}>
                 <Stack direction='row'>
                     <Stack direction='column' spacing={2}>
                         <TextField label='Name' size='small'></TextField>
@@ -47,7 +49,11 @@ export default function EditView(props: EditViewProps) {
                             filename={filename}
                             setFilename={setFilename}
                         />
-                        <GoogleFontsAutocomplete />
+                        <GoogleFontsAutocomplete
+                            font={font}
+                            setFont={setFont}
+                        />
+                        <ColorPicker />
                     </Stack>
                     <Card id='countdown-preview'>
 
