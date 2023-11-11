@@ -4,7 +4,7 @@ import { useState } from 'react';
 // Components
 import { Box, Grid } from '@mui/material';
 import ViewThumbnail from '../component/ViewThumbnail';
-import EditView from '../component/EditView';
+import ViewSettingsDrawer from '../component/ViewSettingsDrawer';
 
 export default function ViewControllerPage() {
     const [showEditView, setShowEditView] = useState(false);
@@ -32,8 +32,8 @@ export default function ViewControllerPage() {
             <Grid container spacing={2} sx={{ p: 4 }}>
                 <ViewThumbnail addView onClick={openAddView} />
             </Grid>
-            <EditView
-                show={showEditView || showAddView}
+            <ViewSettingsDrawer
+                open={showEditView || showAddView}
                 add={showAddView}
                 close={closeEditView}
             />
