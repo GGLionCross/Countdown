@@ -44,6 +44,10 @@ export default function UploadFileField(props: UploadFileFieldProps) {
             label='Background Image'
             size='small'
             onClick={handleUpload}
+            InputLabelProps={{ 
+                // This forces the Input Label not to overlap with our filename
+                shrink: Boolean(props.file?.name)
+            }}
             InputProps={{
                 endAdornment: (
                     <InputAdornment position='end'>

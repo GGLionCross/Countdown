@@ -35,21 +35,18 @@ export default function EditView(props: EditViewProps) {
         // boxShadow: 1,
         // elevation: 2
     }
-    const [filename, setFilename] = useState('');
     const [background, setBackground] = useState<File | null>(null);
     const [font, setFont] = useState('');
     const [fontColor, setFontColor] = useState('');
 
     return (
         <Slide in={props.show} direction='up' mountOnEnter unmountOnExit>
-            <Paper elevation={4} sx={footerStyle}>
+            <Paper elevation={3} sx={footerStyle}>
                 <Stack direction='row'>
                     <Stack direction='column' spacing={2}>
                         <TextField label='Name' size='small'></TextField>
                         <UploadFileField
                             accept='image/*'
-                            filename={filename}
-                            setFilename={setFilename}
                             file={background}
                             setFile={setBackground}
                         />

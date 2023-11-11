@@ -40,7 +40,7 @@ export default function FontColorPicker(props: ColorPickerProps) {
     return (
         <TextField
             value={props.color}
-            label='Background Image'
+            label='Font Color'
             size='small'
             onClick={clickColorInput}
             InputProps={{
