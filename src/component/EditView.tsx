@@ -36,6 +36,7 @@ export default function EditView(props: EditViewProps) {
         // elevation: 2
     }
     const [filename, setFilename] = useState('');
+    const [background, setBackground] = useState<File | null>(null);
     const [font, setFont] = useState('');
     const [fontColor, setFontColor] = useState('');
 
@@ -49,6 +50,8 @@ export default function EditView(props: EditViewProps) {
                             accept='image/*'
                             filename={filename}
                             setFilename={setFilename}
+                            file={background}
+                            setFile={setBackground}
                         />
                         <GoogleFontsAutocomplete
                             font={font}

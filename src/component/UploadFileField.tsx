@@ -10,8 +10,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 interface UploadFileFieldProps {
     accept?: string; // Accepted filetypes
-    filename: string;
-    setFilename: Dispatch<SetStateAction<string>>;
+    file: File | null;
+    setFile: Dispatch<SetStateAction<File | null>>;
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -34,13 +34,13 @@ export default function UploadFileField(props: UploadFileFieldProps) {
     };
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files?.length) {
-            props.setFilename(event.target.files[0].name);
+            props.setFile(event.target.files[0]);
         }
     };
 
     return (
         <TextField
-            value={props.filename}
+            value={props.file?.name}
             label='Background Image'
             size='small'
             onClick={handleUpload}
