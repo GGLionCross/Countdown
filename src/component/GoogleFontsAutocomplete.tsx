@@ -6,7 +6,6 @@ import { app } from '../services/firebase';
 import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useThemeProps } from '@mui/material';
 
 interface GoogleFontsAutocompleteProps {
     font: string;
