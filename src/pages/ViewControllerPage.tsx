@@ -9,9 +9,9 @@ import EditView from '../component/EditView';
 export default function ViewControllerPage() {
     const [showEditView, setShowEditView] = useState(false);
     const [showAddView, setShowAddView] = useState(false);
-    const openEditView = () => {
-        setShowEditView(true);
-    }
+    // const openEditView = () => {
+    //     setShowEditView(true);
+    // }
 
     const openAddView = () => {
         setShowAddView(true);

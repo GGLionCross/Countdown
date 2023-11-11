@@ -12,6 +12,7 @@ import {
     TextField
 } from "@mui/material";
 import UploadFileField from "./UploadFileField";
+import GoogleFontsAutocomplete from "./GoogleFontsAutocomplete";
 
 interface EditViewProps {
     show: boolean;
@@ -46,6 +47,7 @@ export default function EditView(props: EditViewProps) {
                             filename={filename}
                             setFilename={setFilename}
                         />
+                        <GoogleFontsAutocomplete />
                     </Stack>
                     <Card id='countdown-preview'>
 
