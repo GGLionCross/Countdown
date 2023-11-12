@@ -7,8 +7,9 @@ import {
 
 // Components
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
-import FormatItalicIcon from '@mui/icons-material/FormatItalic';
-import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
+// * Not all our fonts have Italic or Underline styling, so we are taking them out for now.
+// import FormatItalicIcon from '@mui/icons-material/FormatItalic';
+// import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import {
     ToggleButton,
     ToggleButtonGroup
@@ -34,12 +35,12 @@ export default function FontFormatToggleGroup(props: FontFormatToggleGroupProps)
             <ToggleButton value='bold' size='small' aria-label='bold'>
                 <FormatBoldIcon />
             </ToggleButton>
-            <ToggleButton value='italic' size='small' aria-label='italic'>
+            {/* <ToggleButton value='italic' size='small' aria-label='italic'>
                 <FormatItalicIcon />
             </ToggleButton>
             <ToggleButton value='underlined' size='small' aria-label='underlined'>
                 <FormatUnderlinedIcon />
-            </ToggleButton>
+            </ToggleButton> */}
         </ToggleButtonGroup>
     );
 }

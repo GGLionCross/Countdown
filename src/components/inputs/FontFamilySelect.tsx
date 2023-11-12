@@ -2,7 +2,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
 // Fonts
-import { desiredGoogleFonts } from '../themes/fonts';
+import { desiredGoogleFonts } from '../../themes/fonts';
 
 // Components
 import {
@@ -34,8 +34,13 @@ export default function FontFamilySelect(props: FontFamilySelectProps) {
 
     return (
         <FormControl>
-            <InputLabel size='small'>Font Family</InputLabel>
+            <InputLabel id='font-family-label' size='small'>
+                Font Family
+            </InputLabel>
             <Select
+                labelId='font-family-label'
+                id='font-family-select'
+                name='font-family'
                 label='Font Family'
                 value={props.font}
                 onChange={onChange}

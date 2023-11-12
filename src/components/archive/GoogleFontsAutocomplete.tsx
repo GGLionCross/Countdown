@@ -1,3 +1,5 @@
+// ! Not currently in use, but kept in case I need an Autocomplete template
+
 // React
 import { HTMLAttributes } from 'react';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';

@@ -51,7 +51,7 @@ export default function FontSizeField(props: FontSizeFieldProps) {
 
     return (
         <TextField
-            label='Overlay'
+            label='Font Size'
             type='number'
             value={text}
             onChange={onTextChange}

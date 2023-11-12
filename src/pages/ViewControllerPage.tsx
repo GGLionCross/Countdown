@@ -3,8 +3,8 @@ import { useState } from 'react';
 
 // Components
 import { Box, Grid } from '@mui/material';
-import ViewThumbnail from '../component/ViewThumbnail';
-import ViewSettingsDrawer from '../component/ViewSettingsDrawer';
+import ViewThumbnail from '../components/ViewThumbnail';
+import ViewSettingsDrawer from '../components/ViewSettingsDrawer';
 
 export default function ViewControllerPage() {
     const [showEditView, setShowEditView] = useState(false);

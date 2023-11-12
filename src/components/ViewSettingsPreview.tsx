@@ -10,6 +10,8 @@ interface ViewSettingsPreviewProps {
     overlayOpacity: number;
     fontFamily: string;
     fontSize: number;
+    fontFormats: string[];
+    fontColor: string;
 }
 
 export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
@@ -59,8 +61,12 @@ export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
                 <Box
                     sx={{
                         zIndex: 2,
+                        color: props.fontColor,
                         fontFamily: props.fontFamily,
-                        fontSize: props.fontSize
+                        fontSize: props.fontSize,
+                        fontWeight: props.fontFormats.includes('bold') ? 700 : 400,
+                        // fontStyle: props.fontFormats.includes('italic') ? 'italic' : 'none',
+                        // textDecoration: props.fontFormats.includes('underline') ? 'underline' : 'none'
                     }}
                 >
                     12:34

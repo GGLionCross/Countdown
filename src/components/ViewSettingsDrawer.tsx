@@ -13,13 +13,16 @@ import {
     Stack,
     TextField
 } from "@mui/material";
-import CustomSlider from "./CustomSlider";
-import FontColorPicker from "./FontColorPicker";
-import FontFamilySelect from "./FontFamilySelect";
+import CustomSlider from "./inputs/CustomSlider";
+import ColorPicker from "./inputs/ColorPicker";
+import FontFamilySelect from "./inputs/FontFamilySelect";
 import FontFormatToggleGroup from "./FontFormatToggleGroup";
 import FontSizeField from "./FontSizeField";
 import UploadFileField from "./UploadFileField";
 import ViewSettingsPreview from "./ViewSettingsPreview";
+
+// Icons
+import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 
 interface ViewSettingsDrawerProps {
     open: boolean;
@@ -35,7 +38,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     const [fontFamily, setFontFamily] = useState('Roboto');
     const [fontSize, setFontSize] = useState(64);
     const [fontFormats, setFontFormats] = useState(() => ['']);
-    const [fontColor, setFontColor] = useState('');
+    const [fontColor, setFontColor] = useState('#ffffff');
 
     const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -67,7 +70,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                     font={fontFamily}
                     setFont={setFontFamily}
                 />
-                <Stack direction='row'>
+                <Stack direction='row' spacing={2}>
                     <FontSizeField
                         size={fontSize}
                         setSize={setFontSize}
@@ -79,10 +82,12 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         formats={fontFormats}
                         setFormats={setFontFormats}
                     />
-                    <FontColorPicker
+                    <ColorPicker
                         color={fontColor}
                         setColor={setFontColor}
-                    />
+                    >
+                        <FormatColorTextIcon />
+                    </ColorPicker>
                 </Stack>
             </Stack>
             <Box display='flex' justifyContent='center' sx={{ pt: 2 }}>
@@ -98,6 +103,8 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                 overlayOpacity={overlayOpacity}
                 fontFamily={fontFamily}
                 fontSize={fontSize}
+                fontFormats={fontFormats}
+                fontColor={fontColor}
             />
         </Drawer>
     )

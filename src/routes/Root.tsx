@@ -2,7 +2,7 @@
 import { useAuth } from '../services/auth';
 
 // Pages
-import NavigationHeader from '../component/NavigationHeader';
+import NavigationHeader from '../components/NavigationHeader';
 import SignInPage from '../pages/SignInPage';
 import ViewControllerPage from '../pages/ViewControllerPage';
 

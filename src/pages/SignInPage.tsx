@@ -1,6 +1,6 @@
 // Components
 import { Container } from '@mui/material'
-import SignInCard from '../component/SignInCard'
+import SignInCard from '../components/SignInCard'
 
 export default function SignInPage() {
     return (
