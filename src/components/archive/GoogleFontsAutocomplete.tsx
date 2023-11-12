@@ -5,7 +5,7 @@ import { HTMLAttributes } from 'react';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 // Fonts
-import { desiredGoogleFonts } from '../themes/fonts';
+import { desiredGoogleFonts } from '../../themes/fonts';
 
 // Components
 import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
