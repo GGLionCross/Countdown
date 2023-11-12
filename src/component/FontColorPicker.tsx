@@ -2,10 +2,13 @@
 import { useRef } from 'react';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
+// TODO: Either utilize debounce to smooth color picking or uninstall lodash
+//import { debounce } from 'lodash';
+// import { useCallback } from 'react';
+
 // Components
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
+import { IconButton } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
 
@@ -29,6 +32,14 @@ const VisuallyHiddenInput = styled('input')({
 export default function FontColorPicker(props: ColorPickerProps) {
     const hiddenRef = useRef<HTMLInputElement>(null);
 
+    // const debouncedSetColor = useCallback(
+    //     debounce((value: string) => props.setColor(value), 200),
+    //     []
+    // );
+    // const handleColorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    //     debouncedSetColor(event.target.value);
+    // };
+
     const handleColorChange = (event: ChangeEvent<HTMLInputElement>) => {
         props.setColor(event.target.value);
     };
@@ -38,24 +49,13 @@ export default function FontColorPicker(props: ColorPickerProps) {
     }
 
     return (
-        <TextField
-            value={props.color}
-            label='Font Color'
-            size='small'
-            onClick={clickColorInput}
-            InputProps={{
-                endAdornment: (
-                    <InputAdornment position='end'>
-                        <FormatColorTextIcon />
-                        <VisuallyHiddenInput
-                            type='color'
-                            ref={hiddenRef}
-                            onChange={handleColorChange}
-                        />
-                    </InputAdornment>
-                ),
-                readOnly: true
-            }}
-        />
+        <IconButton onClick={clickColorInput}>
+            <FormatColorTextIcon sx={{ color: props.color }}/>
+            <VisuallyHiddenInput
+                type='color'
+                ref={hiddenRef}
+                onChange={handleColorChange}
+            />
+        </IconButton>
     );
 }

@@ -8,6 +8,8 @@ import { Box, Paper } from "@mui/material";
 interface ViewSettingsPreviewProps {
     background: File | null;
     overlayOpacity: number;
+    fontFamily: string;
+    fontSize: number;
 }
 
 export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
@@ -42,6 +44,10 @@ export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
             <Paper
                 elevation={4}
                 sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
                     height: '54vh',
                     width: '96vh', // 16:9 = 96:54
                     backgroundImage: `url(${backgroundImage})`,
@@ -51,17 +57,24 @@ export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
                 }}
             >
                 <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
                     sx={{
+                        zIndex: 2,
+                        fontFamily: props.fontFamily,
+                        fontSize: props.fontSize
+                    }}
+                >
+                    12:34
+                </Box>
+                <Box
+                    position='absolute'
+                    sx={{
+                        zIndex: 1,
                         width: '100%',
                         height: '100%',
                         backgroundColor: 'black',
                         opacity: props.overlayOpacity,
                     }}
                 >
-                    12:34
                 </Box>
             </Paper>
         </Box>

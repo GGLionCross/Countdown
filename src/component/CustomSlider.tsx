@@ -37,7 +37,6 @@ export default function CustomSlider(props: CustomSliderProps) {
     const onTextChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         const regex = /^\d?(\.\d{0,2})?$/;
-        
 
         if (value === '' || regex.test(value)) {
             setText(value);
@@ -66,6 +65,7 @@ export default function CustomSlider(props: CustomSliderProps) {
             <Grid item xs={4}>
                 <TextField
                     label='Overlay'
+                    type='number'
                     value={text}
                     onChange={onTextChange}
                     onBlur={onTextBlur}
@@ -75,8 +75,13 @@ export default function CustomSlider(props: CustomSliderProps) {
                         // This forces the Input Label not to overlap with our filename
                         shrink: true
                     }}
-                    inputProps={{
-                        maxLength: 4, // One digit, decimal point, and two digits
+                    InputProps={{
+                        inputProps: {
+                            min: props.min,
+                            max: props.max,
+                            step: props.step,
+                            maxLength: 4
+                        }
                     }}
                 />
             </Grid>

@@ -15,7 +15,9 @@ import {
 } from "@mui/material";
 import CustomSlider from "./CustomSlider";
 import FontColorPicker from "./FontColorPicker";
-import GoogleFontsAutocomplete from "./GoogleFontsAutocomplete";
+import FontFamilySelect from "./FontFamilySelect";
+import FontFormatToggleGroup from "./FontFormatToggleGroup";
+import FontSizeField from "./FontSizeField";
 import UploadFileField from "./UploadFileField";
 import ViewSettingsPreview from "./ViewSettingsPreview";
 
@@ -30,7 +32,9 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     const [name, setName] = useState('');
     const [background, setBackground] = useState<File | null>(null);
     const [overlayOpacity, setOverlayOpacity] = useState(0.5); // Initial opacity for the overlay
-    const [font, setFont] = useState('');
+    const [fontFamily, setFontFamily] = useState('Roboto');
+    const [fontSize, setFontSize] = useState(64);
+    const [fontFormats, setFontFormats] = useState(() => ['']);
     const [fontColor, setFontColor] = useState('');
 
     const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -59,14 +63,27 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                     max={1}
                     step={0.01}
                 />
-                <GoogleFontsAutocomplete
-                    font={font}
-                    setFont={setFont}
+                <FontFamilySelect
+                    font={fontFamily}
+                    setFont={setFontFamily}
                 />
-                <FontColorPicker
-                    color={fontColor}
-                    setColor={setFontColor}
-                />
+                <Stack direction='row'>
+                    <FontSizeField
+                        size={fontSize}
+                        setSize={setFontSize}
+                        min={36}
+                        max={128}
+                        step={4}
+                    />
+                    <FontFormatToggleGroup
+                        formats={fontFormats}
+                        setFormats={setFontFormats}
+                    />
+                    <FontColorPicker
+                        color={fontColor}
+                        setColor={setFontColor}
+                    />
+                </Stack>
             </Stack>
             <Box display='flex' justifyContent='center' sx={{ pt: 2 }}>
                 <Button onClick={props.close}>
@@ -79,6 +96,8 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
             <ViewSettingsPreview
                 background={background}
                 overlayOpacity={overlayOpacity}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
             />
         </Drawer>
     )
