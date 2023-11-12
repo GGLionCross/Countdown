@@ -13,6 +13,7 @@ import {
     Stack,
     TextField
 } from "@mui/material";
+import CustomSlider from "./CustomSlider";
 import FontColorPicker from "./FontColorPicker";
 import GoogleFontsAutocomplete from "./GoogleFontsAutocomplete";
 import UploadFileField from "./UploadFileField";
@@ -28,6 +29,7 @@ interface ViewSettingsDrawerProps {
 export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     const [name, setName] = useState('');
     const [background, setBackground] = useState<File | null>(null);
+    const [overlayOpacity, setOverlayOpacity] = useState(0.5); // Initial opacity for the overlay
     const [font, setFont] = useState('');
     const [fontColor, setFontColor] = useState('');
 
@@ -50,6 +52,13 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                     file={background}
                     setFile={setBackground}
                 />
+                <CustomSlider
+                    value={overlayOpacity}
+                    setValue={setOverlayOpacity}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                />
                 <GoogleFontsAutocomplete
                     font={font}
                     setFont={setFont}
@@ -69,6 +78,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
             </Box>
             <ViewSettingsPreview
                 background={background}
+                overlayOpacity={overlayOpacity}
             />
         </Drawer>
     )
