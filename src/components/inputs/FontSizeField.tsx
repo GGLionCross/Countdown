@@ -4,13 +4,11 @@ import {
     Dispatch,
     KeyboardEvent,
     SetStateAction,
-    useState
+    useState,
 } from 'react';
 
 // Components
-import {
-    TextField
-} from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 
 interface FontSizeFieldProps {
     size: number;
@@ -21,7 +19,7 @@ interface FontSizeFieldProps {
 }
 
 export default function FontSizeField(props: FontSizeFieldProps) {
-    const [text, setText] = useState(props.size.toString())
+    const [text, setText] = useState(props.size.toString());
 
     const onTextChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
@@ -47,7 +45,7 @@ export default function FontSizeField(props: FontSizeFieldProps) {
             const input = event.target as HTMLInputElement;
             input.blur();
         }
-    }
+    };
 
     return (
         <TextField
@@ -58,17 +56,18 @@ export default function FontSizeField(props: FontSizeFieldProps) {
             onBlur={onTextBlur}
             onKeyUp={onTextKeyUp}
             size='small'
-            InputLabelProps={{ 
+            InputLabelProps={{
                 // This forces the Input Label not to overlap with our filename
-                shrink: true
+                shrink: true,
             }}
             InputProps={{
                 inputProps: {
                     min: props.min,
                     max: props.max,
                     step: props.step || 1,
-                    maxLength: 4
-                }
+                    maxLength: 4,
+                },
+                endAdornment: <InputAdornment position='end'>%</InputAdornment>,
             }}
         />
     );

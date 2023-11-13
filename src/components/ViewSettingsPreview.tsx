@@ -15,6 +15,8 @@ interface ViewSettingsPreviewProps {
 }
 
 export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
+    const viewHeight = 54; // Preview Height as a % of vh
+    const viewWidth = (54 * 16) / 9; // Preview Width as a % of vh, keeping 16:9 ratio
     const [backgroundImage, setBackgroundImage] = useState('');
 
     useEffect(() => {
@@ -51,8 +53,8 @@ export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
                         justifyContent: 'center',
                         alignItems: 'center',
                         position: 'relative',
-                        height: '54vh',
-                        width: '96vh', // 16:9 = 96:54
+                        height: `${viewHeight}vh`,
+                        width: `${viewWidth}vh`, // 16:9 = 96:54
                         backgroundImage: `url(${backgroundImage})`,
                         backgroundPosition: 'center', // Center the background image
                         backgroundRepeat: 'no-repeat', // Do not repeat the image
@@ -64,7 +66,9 @@ export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
                             zIndex: 2,
                             color: props.fontColor,
                             fontFamily: props.fontFamily,
-                            fontSize: props.fontSize,
+                            fontSize: `${
+                                (props.fontSize * viewHeight) / 100
+                            }vh`,
                             fontWeight: props.fontFormats.includes('bold')
                                 ? 700
                                 : 400,

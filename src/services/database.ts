@@ -1,23 +1,26 @@
+// React
+import { Dispatch, SetStateAction } from 'react';
+
 import { database } from './firebase';
-import { ref, push, set } from 'firebase/database';
+import { onValue, push, ref, set } from 'firebase/database';
 import { getUid } from './auth';
 import { uploadBackgroundImage } from './storage';
 
-export interface SaveViewSchema {
+export interface ViewSchema<B extends File | string, T extends Date | string> {
     name: string;
-    background: File | null;
+    background: B | null;
     overlayOpacity: number; // Initial opacity for the overlay
     fontFamily: string;
     fontSize: number;
     fontFormats: string[];
     fontColor: string;
-    targetTime: Date;
-    startTime: Date;
+    targetTime: T;
+    startTime: T;
 }
 
 export const saveView = async (
     viewId: string | null,
-    viewObj: SaveViewSchema
+    viewObj: ViewSchema<File, Date>
 ) => {
     const baseUrl = 'countdown/views';
     // We shouldn't be pushing views with no names to the database
@@ -45,7 +48,7 @@ export const saveView = async (
                 );
             }
 
-            const viewData = {
+            const viewData: ViewSchema<string, string> = {
                 name: viewObj.name,
                 background: backgroundURL,
                 overlayOpacity: viewObj.overlayOpacity,
@@ -53,12 +56,8 @@ export const saveView = async (
                 fontSize: viewObj.fontSize,
                 fontFormats: viewObj.fontFormats,
                 fontColor: viewObj.fontColor,
-                targetTime: viewObj.targetTime
-                    ? viewObj.targetTime.toISOString()
-                    : null,
-                startTime: viewObj.startTime
-                    ? viewObj.startTime.toISOString()
-                    : null,
+                targetTime: viewObj.targetTime.toISOString(),
+                startTime: viewObj.startTime.toISOString(),
             };
 
             if (saveViewRef) {
@@ -67,3 +66,25 @@ export const saveView = async (
         }
     }
 };
+
+export function subscribeToViews(
+    setViews: Dispatch<SetStateAction<ViewSchema<string, string> | null>>
+) {
+    const uid = getUid();
+    const viewsRef = ref(database, `countdown/views/${uid}`);
+    const unsubscribe = onValue(
+        viewsRef,
+        snapshot => {
+            if (snapshot.exists()) {
+                setViews(snapshot.val());
+            } else {
+                setViews(null);
+            }
+        },
+        {
+            // If you only want to fetch data once and not listen for changes
+            // onlyOnce: true,
+        }
+    );
+    return { viewsRef, unsubscribe };
+}

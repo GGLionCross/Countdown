@@ -17,10 +17,11 @@ import ViewSettingsPreview from './ViewSettingsPreview';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 
 // Services
-import { saveView, SaveViewSchema } from '../services/database';
+import { saveView, ViewSchema } from '../services/database';
 
 interface ViewSettingsDrawerProps {
     viewId: string | null; // View Id to edit; null means adding view.
+    viewData: ViewSchema<string, string> | null; // View Data to edit; null means adding view.
     open: boolean;
     add: boolean; // Whether to add or edit an existing view
     close: () => void;
@@ -43,6 +44,13 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
         initialTime.setHours(10, 0, 0, 0);
         return initialTime;
     });
+
+    useEffect(() => {
+        if (props.viewData) {
+            setName(props.viewData.name);
+        }
+    }, [props.viewData]);
+
     const [targetTimeError, setTargetTimeError] = useState(false);
     const [targetTimeErrorText, setTargetTimeErrorText] = useState('');
     const [startTime, setStartTime] = useState<Date | null>(() => {
@@ -118,7 +126,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
 
     const handleSave = async () => {
         if (targetTime && startTime) {
-            const viewObj: SaveViewSchema = {
+            const viewObj: ViewSchema<File, Date> = {
                 name: name,
                 background: background,
                 overlayOpacity: overlayOpacity,
@@ -132,13 +140,13 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
             setSaveLoading(true);
             try {
                 await saveView(props.viewId, viewObj);
+                // If no errors were caught
+                closeDrawer();
             } catch (error: unknown) {
                 console.error('An error occurred while saving: ', error);
             } finally {
                 setSaveLoading(false);
             }
-            // If no errors were caught
-            closeDrawer();
         }
     };
 
@@ -184,9 +192,9 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         <FontSizeField
                             size={fontSize}
                             setSize={setFontSize}
-                            min={36}
-                            max={128}
-                            step={4}
+                            min={20}
+                            max={60}
+                            step={2}
                         />
                         <FontFormatToggleGroup
                             formats={fontFormats}

@@ -17,6 +17,7 @@ export default function ProfileMenu(props: ProfileMenuProps) {
             onClose={props.close}
         >
             <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+            {/* <MenuItem onClick={}>Test</MenuItem> */}
         </Menu>
     );
 }
