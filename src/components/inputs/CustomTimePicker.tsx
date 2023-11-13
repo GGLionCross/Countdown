@@ -5,12 +5,13 @@ import { Dispatch, SetStateAction } from 'react';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// import TextField, { TextFieldProps } from '@mui/material/TextField';
 
 interface CustomTimePickerProps {
     label: string;
     time: Date | null;
     setTime: Dispatch<SetStateAction<Date | null>>;
+    error?: boolean;
+    helperText?: string;
 }
 
 export default function CustomTimePicker(props: CustomTimePickerProps) {
@@ -23,6 +24,13 @@ export default function CustomTimePicker(props: CustomTimePickerProps) {
                 label={props.label}
                 value={props.time}
                 onChange={handleTimeChange}
+                slotProps={{
+                    textField: {
+                        size: 'small',
+                        error: props.error,
+                        helperText: props.helperText,
+                    },
+                }}
             />
         </LocalizationProvider>
     );

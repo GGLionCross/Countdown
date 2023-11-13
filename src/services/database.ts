@@ -3,7 +3,7 @@ import { ref, push, set } from 'firebase/database';
 import { getUid } from './auth';
 import { uploadBackgroundImage } from './storage';
 
-interface SaveViewSchema {
+export interface SaveViewSchema {
     name: string;
     background: File | null;
     overlayOpacity: number; // Initial opacity for the overlay
@@ -29,7 +29,7 @@ export const saveView = async (
             let saveViewRef = null;
             if (vId === null) {
                 const viewRef = ref(database, `${baseUrl}/${uid}`);
-                const saveViewRef = push(viewRef);
+                saveViewRef = push(viewRef);
                 vId = saveViewRef.key;
             } else {
                 saveViewRef = ref(database, `${baseUrl}/${uid}/${vId}`);
