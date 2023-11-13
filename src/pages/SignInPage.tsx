@@ -1,6 +1,6 @@
 // Components
-import { Container } from '@mui/material'
-import SignInCard from '../components/SignInCard'
+import { Container } from '@mui/material';
+import SignInCard from '../components/SignIn/SignInCard';
 
 export default function SignInPage() {
     return (
@@ -10,10 +10,10 @@ export default function SignInPage() {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '100%'
+                height: '100%',
             }}
         >
             <SignInCard />
         </Container>
-    )
+    );
 }
