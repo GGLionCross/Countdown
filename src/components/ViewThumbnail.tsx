@@ -7,7 +7,7 @@ import { Box, Button, Card, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add'; // Import the add icon
 
 // Services
-import { ViewSchema } from '../services/database';
+import { ViewSchema } from '~/services/database';
 
 interface ViewThumbnailProps {
     viewId?: string;

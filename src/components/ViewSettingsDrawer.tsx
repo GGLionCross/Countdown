@@ -17,7 +17,7 @@ import ViewSettingsPreview from './ViewSettingsPreview';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 
 // Services
-import { saveView, ViewSchema } from '../services/database';
+import { saveView, ViewSchema } from '~/services/database';
 
 interface ViewSettingsDrawerProps {
     viewId: string | null; // View Id to edit; null means adding view.

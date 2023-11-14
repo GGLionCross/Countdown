@@ -2,7 +2,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
 // Fonts
-import { desiredGoogleFonts } from '../../themes/fonts';
+import { desiredGoogleFonts } from '~/themes/fonts';
 
 // Components
 import {
@@ -10,7 +10,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    SelectChangeEvent
+    SelectChangeEvent,
 } from '@mui/material';
 
 interface FontFamilySelectProps {
@@ -19,10 +19,9 @@ interface FontFamilySelectProps {
 }
 
 export default function FontFamilySelect(props: FontFamilySelectProps) {
-
     const onChange = (event: SelectChangeEvent<string>) => {
         props.setFont(event.target.value);
-    }
+    };
 
     const renderOptions = () => {
         return desiredGoogleFonts.map((option: string, index: number) => (
@@ -30,7 +29,7 @@ export default function FontFamilySelect(props: FontFamilySelectProps) {
                 {option}
             </MenuItem>
         ));
-    }
+    };
 
     return (
         <FormControl>

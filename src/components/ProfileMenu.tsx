@@ -1,5 +1,5 @@
 import { Menu, MenuItem } from '@mui/material';
-import { handleSignOut } from '../services/auth';
+import { handleSignOut } from '~/services/auth';
 
 interface ProfileMenuProps {
     anchor: HTMLElement | null;

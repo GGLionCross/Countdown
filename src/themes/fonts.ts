@@ -1,4 +1,4 @@
-import { app } from '../services/firebase';
+import { app } from '~/services/firebase';
 
 export const desiredGoogleFonts = [
     'Arvo',

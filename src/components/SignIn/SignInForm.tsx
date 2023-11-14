@@ -4,8 +4,8 @@ import { GoogleLogin } from '@react-oauth/google';
 
 // Firebase Imports
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
-import { auth } from '../../services/firebase';
-import { handleAuthResponse } from '../../services/auth';
+import { auth } from '~/services/firebase';
+import { handleAuthResponse } from '~/services/auth';
 
 export default function SignInForm() {
     const handleSuccess = async (response: CredentialResponse) => {

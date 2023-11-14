@@ -5,10 +5,12 @@ import { HTMLAttributes } from 'react';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 // Fonts
-import { desiredGoogleFonts } from '../../themes/fonts';
+import { desiredGoogleFonts } from '~/themes/fonts';
 
 // Components
-import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
+import Autocomplete, {
+    AutocompleteRenderInputParams,
+} from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
 interface GoogleFontsAutocompleteProps {
@@ -16,15 +18,16 @@ interface GoogleFontsAutocompleteProps {
     setFont: Dispatch<SetStateAction<string>>;
 }
 
-export default function GoogleFontsAutocomplete(props: GoogleFontsAutocompleteProps) {
-
+export default function GoogleFontsAutocomplete(
+    props: GoogleFontsAutocompleteProps
+) {
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         props.setFont(event.target.value);
-    }
+    };
 
     const renderInput = (params: AutocompleteRenderInputParams) => (
         <TextField
-            {...params}
+            {~.params}
             label='Font'
             value={props.font}
             onChange={onChange}
@@ -33,21 +36,27 @@ export default function GoogleFontsAutocomplete(props: GoogleFontsAutocompletePr
         />
     );
 
-    const renderOption = (props: HTMLAttributes<HTMLLIElement>, option: string) => {
+    const renderOption = (
+        props: HTMLAttributes<HTMLLIElement>,
+        option: string
+    ) => {
         // Load the font when rendering the option
         return (
-            <li {...props} style={{
-                fontFamily: option
-            }}>
+            <li
+                {~.props}
+                style={{
+                    fontFamily: option,
+                }}
+            >
                 {option}
             </li>
         );
-    }
+    };
 
     return (
         <Autocomplete
             options={desiredGoogleFonts}
-            getOptionLabel={(option) => option}
+            getOptionLabel={option => option}
             renderInput={renderInput}
             renderOption={renderOption}
         />

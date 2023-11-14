@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 
 // Components
 import { Box, Grid } from '@mui/material';
-import ViewThumbnail from '../components/ViewThumbnail';
-import ViewSettingsDrawer from '../components/ViewSettingsDrawer';
+import ViewThumbnail from '~/components/ViewThumbnail';
+import ViewSettingsDrawer from '~/components/ViewSettingsDrawer';
 
 // Services
-import { ViewSchema, subscribeToViews } from '../services/database';
+import { ViewSchema, subscribeToViews } from '~/services/database';
 import { off } from 'firebase/database';
 
 export default function ViewControllerPage() {

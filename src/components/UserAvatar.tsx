@@ -2,7 +2,7 @@
 import { useState, MouseEvent } from 'react';
 
 // Firebase
-import { useAuth } from '../services/auth';
+import { useAuth } from '~/services/auth';
 
 // Components
 import Avatar from '@mui/material/Avatar';
@@ -16,10 +16,10 @@ export default function UserAvatar() {
 
     const openProfileMenu = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchor(event.currentTarget);
-    }
+    };
     const closeProfileMenu = () => {
         setAnchor(null);
-    }
+    };
 
     return (
         <>
