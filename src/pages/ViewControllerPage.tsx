@@ -42,23 +42,28 @@ export default function ViewControllerPage() {
     };
 
     return (
-        <Box
-            sx={{
-                width: '100%',
-                pt: 8,
-            }}
-        >
-            <Grid container spacing={2} sx={{ p: 4 }}>
+        <Box sx={{ pt: 8 }}>
+            <Grid
+                container
+                spacing={2}
+                justifyContent='center'
+                flexShrink={1}
+                sx={{ p: 4 }}
+            >
                 {views
                     ? Object.entries(views).map(([vId, vData]) => (
-                          <ViewThumbnail
-                              viewId={vId}
-                              viewData={vData}
-                              onClick={() => openEditView(vId, vData)}
-                          />
+                          <Grid item>
+                              <ViewThumbnail
+                                  viewId={vId}
+                                  viewData={vData}
+                                  onClick={() => openEditView(vId, vData)}
+                              />
+                          </Grid>
                       ))
                     : null}
-                <ViewThumbnail addView onClick={openAddView} />
+                <Grid item>
+                    <ViewThumbnail addView onClick={openAddView} />
+                </Grid>
             </Grid>
             <ViewSettingsDrawer
                 viewId={viewId}

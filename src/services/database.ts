@@ -16,6 +16,7 @@ export interface ViewSchema<B extends File | string, T extends Date | string> {
     fontColor: string;
     targetTime: T;
     startTime: T;
+    publicMode: boolean;
 }
 
 export const saveView = async (
@@ -58,6 +59,7 @@ export const saveView = async (
                 fontColor: viewObj.fontColor,
                 targetTime: viewObj.targetTime.toISOString(),
                 startTime: viewObj.startTime.toISOString(),
+                publicMode: viewObj.publicMode,
             };
 
             if (saveViewRef) {

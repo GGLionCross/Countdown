@@ -16,7 +16,7 @@ interface ViewSettingsPreviewProps {
 
 export default function ViewSettingsPreview(props: ViewSettingsPreviewProps) {
     const viewHeight = 54; // Preview Height as a % of vh
-    const viewWidth = (54 * 16) / 9; // Preview Width as a % of vh, keeping 16:9 ratio
+    const viewWidth = (viewHeight * 16) / 9; // Preview Width as a % of vh, keeping 16:9 ratio
     const [backgroundImage, setBackgroundImage] = useState('');
 
     useEffect(() => {

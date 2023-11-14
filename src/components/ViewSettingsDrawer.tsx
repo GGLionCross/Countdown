@@ -2,7 +2,15 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
 // Components
-import { Box, Button, Drawer, Stack, TextField } from '@mui/material';
+import {
+    Box,
+    Button,
+    Drawer,
+    FormControlLabel,
+    Stack,
+    Switch,
+    TextField,
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CustomTimePicker from './inputs/CustomTimePicker';
 import CustomSlider from './inputs/CustomSlider';
@@ -35,15 +43,30 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     const [background, setBackground] = useState<File | null>(null);
     const [overlayOpacity, setOverlayOpacity] = useState(0.5); // Initial opacity for the overlay
     const [fontFamily, setFontFamily] = useState('Roboto');
-    const [fontSize, setFontSize] = useState(64);
+    const [fontSize, setFontSize] = useState(40);
     const [fontFormats, setFontFormats] = useState(() => ['']);
     const [fontColor, setFontColor] = useState('#ffffff');
-    const [targetTime, setTargetTime] = useState<Date | null>(() => {
-        const initialTime = new Date();
-        // Set to 10am by default
-        initialTime.setHours(10, 0, 0, 0);
-        return initialTime;
-    });
+    const getDefaultTime = (
+        hr: number,
+        min: number,
+        sec: number,
+        ms: number
+    ) => {
+        const defaultTime = new Date();
+        // Set to 8am by default
+        defaultTime.setHours(hr, min, sec, ms);
+        return defaultTime;
+    };
+    const [targetTime, setTargetTime] = useState<Date | null>(
+        getDefaultTime(10, 0, 0, 0)
+    );
+    const [startTime, setStartTime] = useState<Date | null>(
+        getDefaultTime(8, 0, 0, 0)
+    );
+    const [publicMode, setPublicMode] = useState(false);
+    const togglePublicMode = (event: ChangeEvent<HTMLInputElement>) => {
+        setPublicMode(event.target.checked);
+    };
 
     useEffect(() => {
         if (props.viewData) {
@@ -53,12 +76,6 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
 
     const [targetTimeError, setTargetTimeError] = useState(false);
     const [targetTimeErrorText, setTargetTimeErrorText] = useState('');
-    const [startTime, setStartTime] = useState<Date | null>(() => {
-        const initialTime = new Date();
-        // Set to 8am by default
-        initialTime.setHours(8, 0, 0, 0);
-        return initialTime;
-    });
     const [startTimeError, setStartTimeError] = useState(false);
     const [startTimeErrorText, setStartTimeErrorText] = useState('');
 
@@ -136,6 +153,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                 fontColor: fontColor,
                 targetTime: targetTime,
                 startTime: startTime,
+                publicMode: publicMode,
             };
             setSaveLoading(true);
             try {
@@ -218,6 +236,17 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         error={startTimeError}
                         helperText={startTimeErrorText}
                     />
+                    <Stack direction='row' justifyContent='end'>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={publicMode}
+                                    onChange={togglePublicMode}
+                                />
+                            }
+                            label='Public'
+                        />
+                    </Stack>
                 </Stack>
                 <Box display='flex' justifyContent='center' sx={{ p: 2 }}>
                     <Button onClick={closeDrawer}>Cancel</Button>

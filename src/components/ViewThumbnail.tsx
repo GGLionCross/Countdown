@@ -3,7 +3,7 @@ import { MouseEventHandler } from 'react';
 
 import { SxProps, Theme } from '@mui/material/styles';
 // Components
-import { Box, Button, Card, Grid } from '@mui/material';
+import { Box, Button, Card } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add'; // Import the add icon
 
 // Services
@@ -17,10 +17,12 @@ interface ViewThumbnailProps {
 }
 
 export default function ViewThumbnail(props: ViewThumbnailProps) {
+    const viewHeight = 32; // Preview Height as a % of vh
+    const viewWidth = (viewHeight * 16) / 9; // Preview Width as a % of vh, keeping 16:9 ratio
     const cardStyle = {
         position: 'relative',
-        width: '100%', // Full width of the parent
-        paddingTop: '56.25%', // Aspect ratio padding top
+        height: `${viewHeight}vh`,
+        width: `${viewWidth}vh`, // Full width of the parent
         backgroundImage: `url(${props.viewData?.background})`,
         backgroundPosition: 'center', // Center the background image
         backgroundRepeat: 'no-repeat', // Do not repeat the image
@@ -30,7 +32,7 @@ export default function ViewThumbnail(props: ViewThumbnailProps) {
         ? {
               fontFamily: props.viewData.fontFamily, // TypeScript should infer this is string
               color: props.viewData.fontColor, // TypeScript should infer this is string
-              fontSize: '2rem',
+              fontSize: `${(props.viewData?.fontSize * viewHeight) / 100}vh`,
               fontWeight: props.viewData.fontFormats.includes('bold')
                   ? 700
                   : 400,
@@ -55,28 +57,23 @@ export default function ViewThumbnail(props: ViewThumbnailProps) {
         fontSize: '2rem',
     };
     return (
-        <Grid item xs={12} sm={6} md={3}>
-            <Card sx={cardStyle}>
-                <Button
-                    sx={buttonStyle as SxProps<Theme>}
-                    onClick={props.onClick}
-                >
-                    {props.addView ? <AddIcon sx={addIconStyle} /> : '12:34'}
-                </Button>
-                {props.viewData && (
-                    <Box
-                        position='absolute'
-                        sx={{
-                            zIndex: 1,
-                            top: 0,
-                            width: '100%',
-                            height: '100%',
-                            backgroundColor: 'black',
-                            opacity: props.viewData.overlayOpacity,
-                        }}
-                    ></Box>
-                )}
-            </Card>
-        </Grid>
+        <Card sx={cardStyle}>
+            <Button sx={buttonStyle as SxProps<Theme>} onClick={props.onClick}>
+                {props.addView ? <AddIcon sx={addIconStyle} /> : '12:34'}
+            </Button>
+            {props.viewData && (
+                <Box
+                    position='absolute'
+                    sx={{
+                        zIndex: 1,
+                        top: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'black',
+                        opacity: props.viewData.overlayOpacity,
+                    }}
+                ></Box>
+            )}
+        </Card>
     );
 }
