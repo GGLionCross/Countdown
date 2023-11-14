@@ -1,11 +1,6 @@
 // React
 import { useEffect, useRef, useState } from 'react';
-import {
-    ChangeEvent,
-    Dispatch,
-    ReactNode,
-    SetStateAction
-} from 'react';
+import { ChangeEvent, Dispatch, ReactNode, SetStateAction } from 'react';
 
 // TODO: Either utilize debounce to smooth color picking or uninstall lodash
 //import { debounce } from 'lodash';
@@ -35,18 +30,17 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const getContrastYIQ = (hexcode: string): string => {
-
     // Get the RGB values to calculate the contrast
     const r = parseInt(hexcode.slice(1, 3), 16);
     const g = parseInt(hexcode.slice(3, 5), 16);
     const b = parseInt(hexcode.slice(5, 7), 16);
-  
+
     // Calculate the YIQ (luminance) value
-    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-  
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+
     // Return black for light colors and white for dark colors
-    return (yiq >= 128) ? 'black' : 'white';
-}
+    return yiq >= 128 ? 'black' : 'white';
+};
 
 export default function FontColorPicker(props: ColorPickerProps) {
     const [iconColor, setIconColor] = useState('white');
@@ -67,11 +61,11 @@ export default function FontColorPicker(props: ColorPickerProps) {
 
     const clickColorInput = () => {
         hiddenRef.current?.click();
-    }
+    };
 
     useEffect(() => {
         setIconColor(getContrastYIQ(props.color));
-    }, [props.color])
+    }, [props.color]);
 
     return (
         <ButtonBase
@@ -80,7 +74,7 @@ export default function FontColorPicker(props: ColorPickerProps) {
                 backgroundColor: props.color,
                 color: iconColor,
                 px: 1,
-                borderRadius: '4px'
+                borderRadius: '4px',
             }}
         >
             {props.children}
