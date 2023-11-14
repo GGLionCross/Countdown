@@ -1,0 +1,12 @@
+// This is extended in tsconfig.json
+// On startup, react (and later, craco) clean up tsconfig.json to only keep the
+// configuration that it expects to be there for it to work properly. 'paths'
+// property is one of those that it removes when it starts up.
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./src/*"]
+        }
+    }
+}

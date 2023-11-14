@@ -1,5 +1,5 @@
 // Assets
-import logo from '../assets/react.svg';
+import logo from '~/assets/react.svg';
 
 // Components
 import Card from '@mui/material/Card';
@@ -26,10 +26,10 @@ export default function SignInCard() {
                             objectFit: 'contain', // Prevents the logo from being cropped
                         }}
                     />
-                    <Divider variant="middle" />
+                    <Divider variant='middle' />
                     <SignInForm />
                 </Stack>
             </CardContent>
         </Card>
-    )
+    );
 }
