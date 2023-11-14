@@ -52,7 +52,7 @@ export default function ViewControllerPage() {
             >
                 {views
                     ? Object.entries(views).map(([vId, vData]) => (
-                          <Grid item>
+                          <Grid item key={vId}>
                               <ViewThumbnail
                                   viewId={vId}
                                   viewData={vData}

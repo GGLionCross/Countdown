@@ -9,6 +9,7 @@ import { uploadBackgroundImage } from './storage';
 export interface ViewSchema<B extends File | string, T extends Date | string> {
     name: string;
     background: B | null;
+    backgroundName: string | null;
     overlayOpacity: number; // Initial opacity for the overlay
     fontFamily: string;
     fontSize: number;
@@ -40,18 +41,22 @@ export const saveView = async (
             }
 
             // Get Background Download URL
+            let backgroundName = null;
             let backgroundURL = null;
             if (vId && viewObj.background) {
-                backgroundURL = await uploadBackgroundImage(
+                const response = await uploadBackgroundImage(
                     uid,
                     vId,
                     viewObj.background
                 );
+                backgroundName = response.backgroundName;
+                backgroundURL = response.backgroundURL;
             }
 
             const viewData: ViewSchema<string, string> = {
                 name: viewObj.name,
                 background: backgroundURL,
+                backgroundName: backgroundName,
                 overlayOpacity: viewObj.overlayOpacity,
                 fontFamily: viewObj.fontFamily,
                 fontSize: viewObj.fontSize,

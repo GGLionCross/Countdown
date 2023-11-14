@@ -18,10 +18,12 @@ import ColorPicker from '../inputs/ColorPicker';
 import FontFamilySelect from '../inputs/FontFamilySelect';
 import FontFormatToggleGroup from '../inputs/FontFormatToggleGroup';
 import FontSizeField from '../inputs/FontSizeField';
+import SquareButton from '../inputs/SquareButton';
 import UploadFileField from '../inputs/UploadFileField';
 import ViewSettingsPreview from './ViewSettingsPreview';
 
 // Icons
+import DeleteIcon from '@mui/icons-material/Delete';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 
 // Services
@@ -57,12 +59,16 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
         defaultTime.setHours(hr, min, sec, ms);
         return defaultTime;
     };
+    // Target time countdown will reach 00:00.
     const [targetTime, setTargetTime] = useState<Date | null>(
         getDefaultTime(10, 0, 0, 0)
     );
+    // Time to start the countdown. This should be earlier than targetTime.
     const [startTime, setStartTime] = useState<Date | null>(
         getDefaultTime(8, 0, 0, 0)
     );
+
+    // Determines if the user wants their countdown view to be public or not.
     const [publicMode, setPublicMode] = useState(false);
     const togglePublicMode = (event: ChangeEvent<HTMLInputElement>) => {
         setPublicMode(event.target.checked);
@@ -71,6 +77,37 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     useEffect(() => {
         if (props.viewData) {
             setName(props.viewData.name);
+            if (props.viewData.background) {
+                // Convert URL string back to File
+                fetch(props.viewData.background)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(
+                                `HTTP error! status: ${response.status}`
+                            );
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Convert the blob to a file object
+                        const file = new File([blob], 'filename', {
+                            type: blob.type,
+                        });
+                        // Now you can use the file object
+                        setBackground(file);
+                    })
+                    .catch(e => {
+                        console.log('Error fetching the file:', e);
+                    });
+            }
+            setOverlayOpacity(props.viewData.overlayOpacity);
+            setFontFamily(props.viewData.fontFamily);
+            setFontSize(props.viewData.fontSize);
+            setFontFormats(props.viewData.fontFormats);
+            setFontColor(props.viewData.fontColor);
+            setTargetTime(new Date(props.viewData.targetTime));
+            setStartTime(new Date(props.viewData.startTime));
+            setPublicMode(props.viewData.publicMode);
         }
     }, [props.viewData]);
 
@@ -146,6 +183,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
             const viewObj: ViewSchema<File, Date> = {
                 name: name,
                 background: background,
+                backgroundName: background?.name || null,
                 overlayOpacity: overlayOpacity,
                 fontFamily: fontFamily,
                 fontSize: fontSize,
@@ -248,19 +286,31 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         />
                     </Stack>
                 </Stack>
-                <Box display='flex' justifyContent='center' sx={{ p: 2 }}>
-                    <Button onClick={closeDrawer}>Cancel</Button>
-                    <LoadingButton
-                        variant='contained'
-                        onClick={handleSave}
-                        disabled={
-                            nameError || targetTimeError || startTimeError
-                        }
-                        loading={saveLoading}
-                    >
-                        {props.add ? 'Add' : 'Save'}
-                    </LoadingButton>
-                </Box>
+                <Stack
+                    direction='row'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    sx={{ p: 2 }}
+                >
+                    <Box>
+                        <SquareButton>
+                            <DeleteIcon />
+                        </SquareButton>
+                    </Box>
+                    <Box>
+                        <Button onClick={closeDrawer}>Cancel</Button>
+                        <LoadingButton
+                            variant='contained'
+                            onClick={handleSave}
+                            disabled={
+                                nameError || targetTimeError || startTimeError
+                            }
+                            loading={saveLoading}
+                        >
+                            {props.add ? 'Add' : 'Save'}
+                        </LoadingButton>
+                    </Box>
+                </Stack>
             </Stack>
             <ViewSettingsPreview
                 show={showPreview}

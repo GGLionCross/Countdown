@@ -9,5 +9,8 @@ export const uploadBackgroundImage = async (
     const storageRef = ref(storage, `countdownBG/${uid}/${viewId}/background`);
     const snapshot = await uploadBytes(storageRef, background);
     const downloadURL = await getDownloadURL(snapshot.ref);
-    return downloadURL;
+    return {
+        backgroundName: background.name,
+        backgroundURL: downloadURL,
+    };
 };
