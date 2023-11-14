@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env*
+
+# Allowed CORS exceptions
+cors.json
