@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 // Components
 import { Box, Grid } from '@mui/material';
 import ViewThumbnail from '~/components/ViewThumbnail';
-import ViewSettingsDrawer from '~/components/ViewSettingsDrawer';
+import ViewSettingsDrawer from '~/components/ViewSettings/ViewSettingsDrawer';
 
 // Services
 import { ViewSchema, subscribeToViews } from '~/services/database';

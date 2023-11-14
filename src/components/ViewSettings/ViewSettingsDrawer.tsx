@@ -12,13 +12,13 @@ import {
     TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import CustomTimePicker from './inputs/CustomTimePicker';
-import CustomSlider from './inputs/CustomSlider';
-import ColorPicker from './inputs/ColorPicker';
-import FontFamilySelect from './inputs/FontFamilySelect';
-import FontFormatToggleGroup from './inputs/FontFormatToggleGroup';
-import FontSizeField from './inputs/FontSizeField';
-import UploadFileField from './inputs/UploadFileField';
+import CustomTimePicker from '../inputs/CustomTimePicker';
+import CustomSlider from '../inputs/CustomSlider';
+import ColorPicker from '../inputs/ColorPicker';
+import FontFamilySelect from '../inputs/FontFamilySelect';
+import FontFormatToggleGroup from '../inputs/FontFormatToggleGroup';
+import FontSizeField from '../inputs/FontSizeField';
+import UploadFileField from '../inputs/UploadFileField';
 import ViewSettingsPreview from './ViewSettingsPreview';
 
 // Icons
