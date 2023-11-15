@@ -1,5 +1,5 @@
 // React
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 
 // Components
 import {
@@ -12,37 +12,51 @@ import {
 
 interface CustomSelectOption {
     label: string;
-    value: string | number;
+    value: string;
 }
 
 interface CustomSelectProps {
     uniqueId: string; // Unique identifier required for both select and label
     label: string; // Goes in InputLabel component
-    options: CustomSelectOption[]; // Array of labels and values
-    value: string | number; // The passed state of selected value
-    setValue: Dispatch<SetStateAction<string | number>>; // The setter for value
+    options?: CustomSelectOption[]; // Array of options
+    renderOptions?: () => ReactNode;
+    value: string; // The passed state of selected value
+    setValue: Dispatch<SetStateAction<string>>; // The setter for value
+    fullWidth?: boolean; // Whether or not select should expand to full width
 }
 
 export default function CustomSelect(props: CustomSelectProps) {
     const labelId = `${props.uniqueId}-label`;
     const selectId = `${props.uniqueId}-select`;
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleChange = (event: SelectChangeEvent<string>) => {
         props.setValue(event.target.value);
     };
+    const renderOptions = () => {
+        if (props.options) {
+            return props.options.map((item, index) => (
+                <MenuItem key={index} value={item.value}>
+                    {item.label}
+                </MenuItem>
+            ));
+        } else if (props.renderOptions) {
+            return props.renderOptions();
+        }
+    };
     return (
-        <FormControl>
-            <InputLabel id={labelId}>{props.label}</InputLabel>
+        <FormControl fullWidth={props.fullWidth}>
+            <InputLabel id={labelId} htmlFor={selectId} size='small'>
+                {props.label}
+            </InputLabel>
             <Select
                 labelId={labelId}
                 id={selectId}
+                name={props.uniqueId}
                 label={props.label}
+                value={props.value}
                 onChange={handleChange}
+                size='small'
             >
-                {props.options.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                        {item.label}
-                    </MenuItem>
-                ))}
+                {renderOptions()}
             </Select>
         </FormControl>
     );

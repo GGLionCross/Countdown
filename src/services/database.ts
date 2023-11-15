@@ -2,7 +2,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import { database } from './firebase';
-import { onValue, push, ref, set } from 'firebase/database';
+import { onValue, push, ref, remove, set } from 'firebase/database';
 import { getUid } from './auth';
 import { uploadBackgroundImage } from './storage';
 
@@ -17,8 +17,16 @@ export interface ViewSchema<B extends File | string, T extends Date | string> {
     fontColor: string;
     targetTime: T;
     startTime: T;
+    timeFormat: string;
     publicMode: boolean;
 }
+
+export const deleteView = async (viewId: string | null) => {
+    const baseUrl = 'countdown/views';
+    const uid = getUid();
+    const viewRef = ref(database, `${baseUrl}/${uid}/${viewId}`);
+    await remove(viewRef);
+};
 
 export const saveView = async (
     viewId: string | null,
@@ -64,6 +72,7 @@ export const saveView = async (
                 fontColor: viewObj.fontColor,
                 targetTime: viewObj.targetTime.toISOString(),
                 startTime: viewObj.startTime.toISOString(),
+                timeFormat: viewObj.timeFormat,
                 publicMode: viewObj.publicMode,
             };
 

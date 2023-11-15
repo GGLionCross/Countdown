@@ -27,7 +27,7 @@ export default function GoogleFontsAutocomplete(
 
     const renderInput = (params: AutocompleteRenderInputParams) => (
         <TextField
-            {~.params}
+            {...params}
             label='Font'
             value={props.font}
             onChange={onChange}
@@ -43,7 +43,7 @@ export default function GoogleFontsAutocomplete(
         // Load the font when rendering the option
         return (
             <li
-                {~.props}
+                {...props}
                 style={{
                     fontFamily: option,
                 }}

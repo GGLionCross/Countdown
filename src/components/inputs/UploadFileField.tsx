@@ -2,7 +2,7 @@
 import { ChangeEvent, useRef } from 'react';
 import { Dispatch, SetStateAction } from 'react';
 
-import { TextField } from "@mui/material";
+import { TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import ImageIcon from '@mui/icons-material/Image';
@@ -40,13 +40,13 @@ export default function UploadFileField(props: UploadFileFieldProps) {
 
     return (
         <TextField
-            value={props.file?.name}
+            value={props.file ? props.file.name : ''}
             label='Background Image'
             size='small'
             onClick={handleUpload}
-            InputLabelProps={{ 
+            InputLabelProps={{
                 // This forces the Input Label not to overlap with our filename
-                shrink: Boolean(props.file?.name)
+                shrink: Boolean(props.file?.name),
             }}
             InputProps={{
                 endAdornment: (
@@ -60,7 +60,7 @@ export default function UploadFileField(props: UploadFileFieldProps) {
                         />
                     </InputAdornment>
                 ),
-                readOnly: true
+                readOnly: true,
             }}
         />
     );

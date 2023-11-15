@@ -8,7 +8,7 @@ const darkTheme = createTheme({
             paper: '#1e1e1e', // This is the background color for components like Card, Paper, etc.
         },
     },
-    // ~. other customizations
+    // ... other customizations
 });
 
 export default darkTheme;

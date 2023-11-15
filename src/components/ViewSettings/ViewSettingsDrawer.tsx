@@ -12,6 +12,7 @@ import {
     TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import ConfirmDeleteViewDialog from './ConfirmDeleteViewDialog';
 import CustomTimePicker from '../inputs/CustomTimePicker';
 import CustomSlider from '../inputs/CustomSlider';
 import ColorPicker from '../inputs/ColorPicker';
@@ -28,6 +29,7 @@ import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 
 // Services
 import { saveView, ViewSchema } from '~/services/database';
+import CustomSelect from '../inputs/CustomSelect';
 
 interface ViewSettingsDrawerProps {
     viewId: string | null; // View Id to edit; null means adding view.
@@ -67,11 +69,38 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     const [startTime, setStartTime] = useState<Date | null>(
         getDefaultTime(8, 0, 0, 0)
     );
+    const [timeFormat, setTimeFormat] = useState('hh:mm:ss');
+    const timeFormatOptions = [
+        {
+            label: 'hh:mm:ss',
+            value: 'hh:mm:ss',
+        },
+        {
+            label: 'hh:mm',
+            value: 'hh:mm',
+        },
+        {
+            label: 'mm:ss',
+            value: 'mm:ss',
+        },
+    ];
 
     // Determines if the user wants their countdown view to be public or not.
     const [publicMode, setPublicMode] = useState(false);
     const togglePublicMode = (event: ChangeEvent<HTMLInputElement>) => {
         setPublicMode(event.target.checked);
+    };
+
+    // Confirm deletion before actually deleting the view.
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const openConfirmDelete = () => {
+        setShowConfirmDelete(true);
+    };
+    const closeConfirmDelete = () => {
+        setShowConfirmDelete(false);
+    };
+    const onDelete = () => {
+        closeDrawer();
     };
 
     useEffect(() => {
@@ -90,9 +119,13 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                     })
                     .then(blob => {
                         // Convert the blob to a file object
-                        const file = new File([blob], 'filename', {
-                            type: blob.type,
-                        });
+                        const file = new File(
+                            [blob],
+                            props.viewData?.backgroundName || 'background',
+                            {
+                                type: blob.type,
+                            }
+                        );
                         // Now you can use the file object
                         setBackground(file);
                     })
@@ -107,6 +140,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
             setFontColor(props.viewData.fontColor);
             setTargetTime(new Date(props.viewData.targetTime));
             setStartTime(new Date(props.viewData.startTime));
+            setTimeFormat(props.viewData.timeFormat);
             setPublicMode(props.viewData.publicMode);
         }
     }, [props.viewData]);
@@ -191,6 +225,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                 fontColor: fontColor,
                 targetTime: targetTime,
                 startTime: startTime,
+                timeFormat: timeFormat,
                 publicMode: publicMode,
             };
             setSaveLoading(true);
@@ -241,8 +276,8 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         step={0.01}
                     />
                     <FontFamilySelect
-                        font={fontFamily}
-                        setFont={setFontFamily}
+                        fontFamily={fontFamily}
+                        setFontFamily={setFontFamily}
                     />
                     <Stack direction='row' spacing={2}>
                         <FontSizeField
@@ -274,10 +309,27 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         error={startTimeError}
                         helperText={startTimeErrorText}
                     />
-                    <Stack direction='row' justifyContent='end'>
+                    <Stack
+                        direction='row'
+                        spacing={2}
+                        justifyContent='space-between'
+                        sx={{ pr: 1 }}
+                    >
+                        <Box flexGrow={1}>
+                            <CustomSelect
+                                uniqueId='time-format'
+                                label='Time Format'
+                                options={timeFormatOptions}
+                                value={timeFormat}
+                                setValue={setTimeFormat}
+                                fullWidth
+                            />
+                        </Box>
                         <FormControlLabel
                             control={
                                 <Switch
+                                    id='public-mode-switch'
+                                    name='public-mode'
                                     checked={publicMode}
                                     onChange={togglePublicMode}
                                 />
@@ -293,9 +345,11 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                     sx={{ p: 2 }}
                 >
                     <Box>
-                        <SquareButton>
-                            <DeleteIcon />
-                        </SquareButton>
+                        {props.add ? null : (
+                            <SquareButton onClick={openConfirmDelete}>
+                                <DeleteIcon />
+                            </SquareButton>
+                        )}
                     </Box>
                     <Box>
                         <Button onClick={closeDrawer}>Cancel</Button>
@@ -320,6 +374,12 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                 fontSize={fontSize}
                 fontFormats={fontFormats}
                 fontColor={fontColor}
+            />
+            <ConfirmDeleteViewDialog
+                open={showConfirmDelete}
+                viewId={props.viewId}
+                onCancel={closeConfirmDelete}
+                onDelete={onDelete}
             />
         </Drawer>
     );
