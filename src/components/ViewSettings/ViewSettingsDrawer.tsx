@@ -273,9 +273,11 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         size='small'
                         variant='standard'
                     />
-                    <SquareButton onClick={openViewInNewTab}>
-                        <OpenInNewIcon />
-                    </SquareButton>
+                    {props.add ? null : (
+                        <SquareButton onClick={openViewInNewTab}>
+                            <OpenInNewIcon />
+                        </SquareButton>
+                    )}
                 </Stack>
 
                 <Stack
