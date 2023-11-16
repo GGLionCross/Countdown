@@ -33,12 +33,15 @@ export interface ViewSchema<B extends File | string, T extends Date | string> {
     publicMode: boolean;
 }
 
-export const deleteView = async (viewId: string | null) => {
+export const deleteView = async (
+    viewId: string | null,
+    publicMode: boolean
+) => {
     const baseUrl = 'countdown/views';
     const viewRef = ref(database, `${baseUrl}/${viewId}`);
     await remove(viewRef);
     if (viewId) {
-        deleteBackgroundImage(viewId);
+        await deleteBackgroundImage(viewId, publicMode);
     }
 };
 
@@ -63,7 +66,11 @@ export const saveView = async (
     let backgroundName = null;
     let backgroundURL = null;
     if (vId && viewObj.background) {
-        const response = await uploadBackgroundImage(vId, viewObj.background);
+        const response = await uploadBackgroundImage(
+            vId,
+            viewObj.background,
+            viewObj.publicMode
+        );
         backgroundName = response.backgroundName;
         backgroundURL = response.backgroundURL;
     }

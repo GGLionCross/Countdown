@@ -18,6 +18,7 @@ import { deleteView } from '~/services/database';
 export interface ConfirmDeleteViewDialogProps {
     open: boolean;
     viewId: string | null;
+    publicMode: boolean;
     onCancel: () => void;
     onDelete: () => void;
 }
@@ -32,7 +33,7 @@ export default function ConfirmDeleteViewDialog(
     const handleDelete = async () => {
         setLoading(true);
         try {
-            await deleteView(props.viewId);
+            await deleteView(props.viewId, props.publicMode);
             // If no errors were caught
             closeDialog();
             props.onDelete();

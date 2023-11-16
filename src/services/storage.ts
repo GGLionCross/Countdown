@@ -1,4 +1,5 @@
 import { storage } from './firebase';
+import { getUid } from './auth';
 import {
     deleteObject,
     getDownloadURL,
@@ -8,9 +9,15 @@ import {
 
 export const uploadBackgroundImage = async (
     viewId: string,
-    background: File
+    background: File,
+    publicMode: boolean
 ) => {
-    const storageRef = ref(storage, `countdownBG/${viewId}/background`);
+    const uid = getUid();
+    const publicString = publicMode ? 'public' : 'private';
+    const storageRef = ref(
+        storage,
+        `countdownBG/${uid}/${publicString}/${viewId}/background`
+    );
     const snapshot = await uploadBytes(storageRef, background);
     const downloadURL = await getDownloadURL(snapshot.ref);
     return {
@@ -19,8 +26,15 @@ export const uploadBackgroundImage = async (
     };
 };
 
-// TODO: Add deleteBackgroundImage for deleteView
-export const deleteBackgroundImage = async (viewId: string) => {
-    const storageRef = ref(storage, `countdownBG/${viewId}/background`);
+export const deleteBackgroundImage = async (
+    viewId: string,
+    publicMode: boolean
+) => {
+    const uid = getUid();
+    const publicString = publicMode ? 'public' : 'private';
+    const storageRef = ref(
+        storage,
+        `countdownBG/${uid}/${publicString}/${viewId}/background`
+    );
     await deleteObject(storageRef);
 };

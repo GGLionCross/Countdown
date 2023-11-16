@@ -88,7 +88,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     ];
 
     // Determines if the user wants their countdown view to be public or not.
-    const [publicMode, setPublicMode] = useState(false);
+    const [publicMode, setPublicMode] = useState(true);
     const togglePublicMode = (event: ChangeEvent<HTMLInputElement>) => {
         setPublicMode(event.target.checked);
     };
@@ -352,10 +352,10 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                                     name='public-mode'
                                     checked={publicMode}
                                     onChange={togglePublicMode}
-                                    disabled
                                 />
                             }
                             label='Public'
+                            disabled
                         />
                     </Stack>
                 </Stack>
@@ -396,12 +396,15 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                 fontFormats={fontFormats}
                 fontColor={fontColor}
             />
-            <ConfirmDeleteViewDialog
-                open={showConfirmDelete}
-                viewId={props.viewId}
-                onCancel={closeConfirmDelete}
-                onDelete={onDelete}
-            />
+            {props.viewData ? (
+                <ConfirmDeleteViewDialog
+                    open={showConfirmDelete}
+                    viewId={props.viewId}
+                    publicMode={props.viewData.publicMode}
+                    onCancel={closeConfirmDelete}
+                    onDelete={onDelete}
+                />
+            ) : null}
         </Drawer>
     );
 }
