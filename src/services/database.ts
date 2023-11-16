@@ -2,11 +2,23 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import { database } from './firebase';
-import { onValue, push, ref, remove, set } from 'firebase/database';
+import {
+    DatabaseReference,
+    equalTo,
+    onValue,
+    orderByChild,
+    push,
+    Query,
+    query,
+    ref,
+    remove,
+    set,
+} from 'firebase/database';
 import { getUid } from './auth';
-import { uploadBackgroundImage } from './storage';
+import { deleteBackgroundImage, uploadBackgroundImage } from './storage';
 
 export interface ViewSchema<B extends File | string, T extends Date | string> {
+    ownerId: string;
     name: string;
     background: B | null;
     backgroundName: string | null;
@@ -23,9 +35,11 @@ export interface ViewSchema<B extends File | string, T extends Date | string> {
 
 export const deleteView = async (viewId: string | null) => {
     const baseUrl = 'countdown/views';
-    const uid = getUid();
-    const viewRef = ref(database, `${baseUrl}/${uid}/${viewId}`);
+    const viewRef = ref(database, `${baseUrl}/${viewId}`);
     await remove(viewRef);
+    if (viewId) {
+        deleteBackgroundImage(viewId);
+    }
 };
 
 export const saveView = async (
@@ -33,62 +47,80 @@ export const saveView = async (
     viewObj: ViewSchema<File, Date>
 ) => {
     const baseUrl = 'countdown/views';
-    // We shouldn't be pushing views with no names to the database
-    if (viewObj.name.trim() !== '') {
-        const uid = getUid();
-        if (uid) {
-            // Generate a new viewId if it doesn't currently exist
-            let vId = viewId;
-            let saveViewRef = null;
-            if (vId === null) {
-                const viewRef = ref(database, `${baseUrl}/${uid}`);
-                saveViewRef = push(viewRef);
-                vId = saveViewRef.key;
-            } else {
-                saveViewRef = ref(database, `${baseUrl}/${uid}/${vId}`);
-            }
 
-            // Get Background Download URL
-            let backgroundName = null;
-            let backgroundURL = null;
-            if (vId && viewObj.background) {
-                const response = await uploadBackgroundImage(
-                    uid,
-                    vId,
-                    viewObj.background
-                );
-                backgroundName = response.backgroundName;
-                backgroundURL = response.backgroundURL;
-            }
+    // Generate a new viewId if it doesn't currently exist
+    let vId = viewId;
+    let saveViewRef = null;
+    if (vId === null) {
+        const viewRef = ref(database, `${baseUrl}`);
+        saveViewRef = push(viewRef);
+        vId = saveViewRef.key;
+    } else {
+        saveViewRef = ref(database, `${baseUrl}/${vId}`);
+    }
 
-            const viewData: ViewSchema<string, string> = {
-                name: viewObj.name,
-                background: backgroundURL,
-                backgroundName: backgroundName,
-                overlayOpacity: viewObj.overlayOpacity,
-                fontFamily: viewObj.fontFamily,
-                fontSize: viewObj.fontSize,
-                fontFormats: viewObj.fontFormats,
-                fontColor: viewObj.fontColor,
-                targetTime: viewObj.targetTime.toISOString(),
-                startTime: viewObj.startTime.toISOString(),
-                timeFormat: viewObj.timeFormat,
-                publicMode: viewObj.publicMode,
-            };
+    // Get Background Download URL
+    let backgroundName = null;
+    let backgroundURL = null;
+    if (vId && viewObj.background) {
+        const response = await uploadBackgroundImage(vId, viewObj.background);
+        backgroundName = response.backgroundName;
+        backgroundURL = response.backgroundURL;
+    }
 
-            if (saveViewRef) {
-                await set(saveViewRef, viewData);
-            }
+    const uid = getUid();
+    if (uid) {
+        const viewData: ViewSchema<string, string> = {
+            ownerId: uid,
+            name: viewObj.name,
+            background: backgroundURL,
+            backgroundName: backgroundName,
+            overlayOpacity: viewObj.overlayOpacity,
+            fontFamily: viewObj.fontFamily,
+            fontSize: viewObj.fontSize,
+            fontFormats: viewObj.fontFormats,
+            fontColor: viewObj.fontColor,
+            targetTime: viewObj.targetTime.toISOString(),
+            startTime: viewObj.startTime.toISOString(),
+            timeFormat: viewObj.timeFormat,
+            publicMode: viewObj.publicMode,
+        };
+
+        if (saveViewRef) {
+            await set(saveViewRef, viewData);
         }
     }
 };
 
-export function subscribeToViews(
+export function subscribeToAllViews(
     setViews: Dispatch<SetStateAction<ViewSchema<string, string> | null>>
 ) {
+    const viewsRef = ref(database, `countdown/views/`);
+    const unsubscribe = unsubscribeToViews(viewsRef, setViews);
+    return { viewsRef, unsubscribe };
+}
+
+export function subscribeToUserViews(
+    setViews: Dispatch<SetStateAction<ViewSchema<string, string> | null>>
+) {
+    const baseUrl = 'countdown/views';
     const uid = getUid();
-    const viewsRef = ref(database, `countdown/views/${uid}`);
-    const unsubscribe = onValue(
+    const viewsRef = query(
+        ref(database, baseUrl),
+        orderByChild('ownerId'),
+        equalTo(uid || '')
+    );
+    const unsubscribe = unsubscribeToViews(viewsRef, setViews);
+    return { viewsRef, unsubscribe };
+
+    return { viewsRef, unsubscribe };
+}
+
+const unsubscribeToViews = (
+    viewsRef: DatabaseReference | Query,
+    setViews: Dispatch<SetStateAction<ViewSchema<string, string> | null>>
+) =>
+    onValue(
         viewsRef,
         snapshot => {
             if (snapshot.exists()) {
@@ -102,5 +134,3 @@ export function subscribeToViews(
             // onlyOnce: true,
         }
     );
-    return { viewsRef, unsubscribe };
-}

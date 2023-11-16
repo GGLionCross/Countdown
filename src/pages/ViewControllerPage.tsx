@@ -7,13 +7,13 @@ import ViewThumbnail from '~/components/ViewThumbnail';
 import ViewSettingsDrawer from '~/components/ViewSettings/ViewSettingsDrawer';
 
 // Services
-import { ViewSchema, subscribeToViews } from '~/services/database';
+import { ViewSchema, subscribeToUserViews } from '~/services/database';
 import { off } from 'firebase/database';
 
 export default function ViewControllerPage() {
     const [views, setViews] = useState<ViewSchema<string, string> | null>(null);
     useEffect(() => {
-        const { viewsRef, unsubscribe } = subscribeToViews(setViews);
+        const { viewsRef, unsubscribe } = subscribeToUserViews(setViews);
         return () => off(viewsRef, 'value', unsubscribe);
     }, []);
 

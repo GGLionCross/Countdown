@@ -26,8 +26,10 @@ import ViewSettingsPreview from './ViewSettingsPreview';
 // Icons
 import DeleteIcon from '@mui/icons-material/Delete';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 // Services
+import { getUid } from '~/services/auth';
 import { saveView, ViewSchema } from '~/services/database';
 import CustomSelect from '../inputs/CustomSelect';
 
@@ -89,6 +91,11 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     const [publicMode, setPublicMode] = useState(false);
     const togglePublicMode = (event: ChangeEvent<HTMLInputElement>) => {
         setPublicMode(event.target.checked);
+    };
+
+    const openViewInNewTab = () => {
+        const url = `/view/${props.viewId}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
     };
 
     // Confirm deletion before actually deleting the view.
@@ -214,29 +221,33 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
 
     const handleSave = async () => {
         if (targetTime && startTime) {
-            const viewObj: ViewSchema<File, Date> = {
-                name: name,
-                background: background,
-                backgroundName: background?.name || null,
-                overlayOpacity: overlayOpacity,
-                fontFamily: fontFamily,
-                fontSize: fontSize,
-                fontFormats: fontFormats,
-                fontColor: fontColor,
-                targetTime: targetTime,
-                startTime: startTime,
-                timeFormat: timeFormat,
-                publicMode: publicMode,
-            };
-            setSaveLoading(true);
-            try {
-                await saveView(props.viewId, viewObj);
-                // If no errors were caught
-                closeDrawer();
-            } catch (error: unknown) {
-                console.error('An error occurred while saving: ', error);
-            } finally {
-                setSaveLoading(false);
+            const uid = getUid();
+            if (uid) {
+                const viewObj: ViewSchema<File, Date> = {
+                    ownerId: uid,
+                    name: name,
+                    background: background,
+                    backgroundName: background?.name || null,
+                    overlayOpacity: overlayOpacity,
+                    fontFamily: fontFamily,
+                    fontSize: fontSize,
+                    fontFormats: fontFormats,
+                    fontColor: fontColor,
+                    targetTime: targetTime,
+                    startTime: startTime,
+                    timeFormat: timeFormat,
+                    publicMode: publicMode,
+                };
+                setSaveLoading(true);
+                try {
+                    await saveView(props.viewId, viewObj);
+                    // If no errors were caught
+                    closeDrawer();
+                } catch (error: unknown) {
+                    console.error('An error occurred while saving: ', error);
+                } finally {
+                    setSaveLoading(false);
+                }
             }
         }
     };
@@ -248,16 +259,25 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                 justifyContent='start'
                 sx={{ height: '100%' }}
             >
-                <TextField
-                    label='Name'
-                    value={name}
-                    onChange={onNameChange}
-                    error={nameError}
-                    helperText={nameErrorText}
-                    size='small'
-                    variant='standard'
+                <Stack
+                    direction='row'
+                    justifyContent='space-between'
                     sx={{ m: 2 }}
-                />
+                >
+                    <TextField
+                        label='Name'
+                        value={name}
+                        onChange={onNameChange}
+                        error={nameError}
+                        helperText={nameErrorText}
+                        size='small'
+                        variant='standard'
+                    />
+                    <SquareButton onClick={openViewInNewTab}>
+                        <OpenInNewIcon />
+                    </SquareButton>
+                </Stack>
+
                 <Stack
                     direction='column'
                     spacing={2}
@@ -332,6 +352,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                                     name='public-mode'
                                     checked={publicMode}
                                     onChange={togglePublicMode}
+                                    disabled
                                 />
                             }
                             label='Public'
