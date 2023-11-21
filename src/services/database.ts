@@ -27,10 +27,19 @@ export interface ViewSchema<B extends File | string, T extends Date | string> {
     fontSize: number;
     fontFormats: string[];
     fontColor: string;
+    frequency: string;
+    days: string[];
     targetTime: T;
     startTime: T;
     timeFormat: string;
     publicMode: boolean;
+}
+
+export function getTime(hr: number, min: number, sec: number, ms: number) {
+    const defaultTime = new Date();
+    // Set to 8am by default
+    defaultTime.setHours(hr, min, sec, ms);
+    return defaultTime;
 }
 
 export const deleteView = async (
@@ -87,6 +96,8 @@ export const saveView = async (
             fontSize: viewObj.fontSize,
             fontFormats: viewObj.fontFormats,
             fontColor: viewObj.fontColor,
+            frequency: viewObj.frequency,
+            days: viewObj.days,
             targetTime: viewObj.targetTime.toISOString(),
             startTime: viewObj.startTime.toISOString(),
             timeFormat: viewObj.timeFormat,

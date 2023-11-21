@@ -1,5 +1,5 @@
 // Assets
-import logo from '~/assets/react.svg';
+import logo from '~/assets/LionCrossMane.svg';
 
 // Components
 import Card from '@mui/material/Card';

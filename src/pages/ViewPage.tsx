@@ -12,31 +12,61 @@ interface ViewPageProps {
 }
 
 export default function ViewPage(props: ViewPageProps) {
-    const targetTime = new Date(props.viewData.targetTime).getTime();
-    const startTime = new Date(props.viewData.startTime).getTime();
-    const [timer, setTimer] = useState(targetTime - new Date().getTime());
+    const frequency = props.viewData.frequency;
+    const days = props.viewData.days;
+    const getToday = () => {
+        const now = new Date();
+        const today = now.getDay();
+        const days = [
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+        ];
+        return days[today];
+    };
+    const startTime = props.viewData.startTime;
+    const targetTime = props.viewData.targetTime;
+    const [timer, setTimer] = useState(0);
 
     useEffect(() => {
         // Update the countdown every second
         const intervalId = setInterval(() => {
-            const now = new Date();
-            const timeLeft = targetTime - now.getTime();
+            // If a weekly countdown is desired
+            if (frequency === 'weekly') {
+                // If today is included in the specified days
+                if (days.includes(getToday())) {
+                    const now = new Date();
+                    const start = new Date(startTime);
+                    start.setDate(now.getDate());
+                    const target = new Date(targetTime);
+                    target.setDate(now.getDate());
 
-            if (now.getTime() < startTime) {
-                // Don't start until startTime has passed
-                setTimer(targetTime - startTime);
-            } else if (timeLeft <= 0) {
-                // If the countdown is over, clear the interval
-                clearInterval(intervalId);
-                setTimer(0);
-            } else {
-                setTimer(timeLeft);
+                    const timeLeft = target.getTime() - now.getTime();
+
+                    if (now.getTime() < start.getTime()) {
+                        // Don't start until startTime has passed
+                        setTimer(target.getTime() - start.getTime());
+                    } else if (timeLeft <= 0) {
+                        // If the countdown is over, clear the interval
+                        clearInterval(intervalId);
+                        setTimer(0);
+                    } else {
+                        setTimer(timeLeft);
+                    }
+                } else {
+                    clearInterval(intervalId);
+                    setTimer(0);
+                }
             }
         }, 1000); // Update every second
 
         // Cleanup the interval on unmount
         return () => clearInterval(intervalId);
-    }, [targetTime, startTime]);
+    }, [frequency, days, targetTime, startTime]);
 
     // Convert milliseconds to a readable format
     const formatTime = (milliseconds: number, format: string) => {

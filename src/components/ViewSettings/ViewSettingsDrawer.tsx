@@ -1,5 +1,5 @@
 // React
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 
 // Components
 import {
@@ -10,6 +10,8 @@ import {
     Stack,
     Switch,
     TextField,
+    ToggleButton,
+    ToggleButtonGroup,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ConfirmDeleteViewDialog from './ConfirmDeleteViewDialog';
@@ -30,7 +32,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 // Services
 import { getUid } from '~/services/auth';
-import { saveView, ViewSchema } from '~/services/database';
+import { getTime, saveView, ViewSchema } from '~/services/database';
 import CustomSelect from '../inputs/CustomSelect';
 
 interface ViewSettingsDrawerProps {
@@ -52,24 +54,45 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
     const [fontSize, setFontSize] = useState(40);
     const [fontFormats, setFontFormats] = useState(() => ['']);
     const [fontColor, setFontColor] = useState('#ffffff');
-    const getDefaultTime = (
-        hr: number,
-        min: number,
-        sec: number,
-        ms: number
-    ) => {
-        const defaultTime = new Date();
-        // Set to 8am by default
-        defaultTime.setHours(hr, min, sec, ms);
-        return defaultTime;
+    const [frequency, setFrequency] = useState('weekly');
+    const frequencyOptions = [
+        {
+            label: 'Once',
+            value: 'once',
+        },
+        {
+            label: 'Daily',
+            value: 'daily',
+        },
+        {
+            label: 'Weekly',
+            value: 'weekly',
+        },
+        {
+            label: 'Monthly',
+            value: 'monthly',
+        },
+    ];
+    const [days, setDays] = useState(() => ['Monday', 'Wednesday', 'Friday']);
+    const dayOptions = [
+        { label: 'S', value: 'Sunday' },
+        { label: 'M', value: 'Monday' },
+        { label: 'T', value: 'Tuesday' },
+        { label: 'W', value: 'Wednesday' },
+        { label: 'T', value: 'Thursday' },
+        { label: 'F', value: 'Friday' },
+        { label: 'S', value: 'Saturday' },
+    ];
+    const handleDays = (_: MouseEvent<HTMLElement>, newDays: string[]) => {
+        setDays(newDays);
     };
-    // Target time countdown will reach 00:00.
-    const [targetTime, setTargetTime] = useState<Date | null>(
-        getDefaultTime(10, 0, 0, 0)
-    );
     // Time to start the countdown. This should be earlier than targetTime.
     const [startTime, setStartTime] = useState<Date | null>(
-        getDefaultTime(8, 0, 0, 0)
+        getTime(8, 0, 0, 0)
+    );
+    // Target time countdown will reach 00:00.
+    const [targetTime, setTargetTime] = useState<Date | null>(
+        getTime(10, 0, 0, 0)
     );
     const [timeFormat, setTimeFormat] = useState('hh:mm:ss');
     const timeFormatOptions = [
@@ -145,6 +168,7 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
             setFontSize(props.viewData.fontSize);
             setFontFormats(props.viewData.fontFormats);
             setFontColor(props.viewData.fontColor);
+            setFrequency(props.viewData.frequency);
             setTargetTime(new Date(props.viewData.targetTime));
             setStartTime(new Date(props.viewData.startTime));
             setTimeFormat(props.viewData.timeFormat);
@@ -233,6 +257,8 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                     fontSize: fontSize,
                     fontFormats: fontFormats,
                     fontColor: fontColor,
+                    frequency: frequency,
+                    days: days,
                     targetTime: targetTime,
                     startTime: startTime,
                     timeFormat: timeFormat,
@@ -262,7 +288,10 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                 <Stack
                     direction='row'
                     justifyContent='space-between'
-                    sx={{ m: 2 }}
+                    sx={{
+                        p: 2,
+                        borderBottom: '1px solid rgba(255,255,255,0.25)',
+                    }}
                 >
                     <TextField
                         label='Name'
@@ -317,13 +346,27 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                             <FormatColorTextIcon />
                         </ColorPicker>
                     </Stack>
-                    <CustomTimePicker
-                        label='Target'
-                        time={targetTime}
-                        setTime={setTargetTime}
-                        error={targetTimeError}
-                        helperText={targetTimeErrorText}
+                    <CustomSelect
+                        uniqueId='frequency'
+                        label='Frequency'
+                        options={frequencyOptions}
+                        value={frequency}
+                        setValue={setFrequency}
+                        fullWidth
+                        disabled
                     />
+                    {frequency === 'weekly' ? (
+                        <ToggleButtonGroup value={days} onChange={handleDays}>
+                            {dayOptions.map(option => (
+                                <ToggleButton
+                                    key={option.value}
+                                    value={option.value}
+                                >
+                                    {option.label}
+                                </ToggleButton>
+                            ))}
+                        </ToggleButtonGroup>
+                    ) : null}
                     <CustomTimePicker
                         label='Start'
                         time={startTime}
@@ -331,6 +374,14 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                         error={startTimeError}
                         helperText={startTimeErrorText}
                     />
+                    <CustomTimePicker
+                        label='Target'
+                        time={targetTime}
+                        setTime={setTargetTime}
+                        error={targetTimeError}
+                        helperText={targetTimeErrorText}
+                    />
+
                     <Stack
                         direction='row'
                         spacing={2}
@@ -365,7 +416,10 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
                     direction='row'
                     justifyContent='space-between'
                     alignItems='center'
-                    sx={{ p: 2 }}
+                    sx={{
+                        p: 2,
+                        borderTop: '1px solid rgba(255,255,255,0.25)',
+                    }}
                 >
                     <Box>
                         {props.add ? null : (

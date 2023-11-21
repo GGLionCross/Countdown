@@ -7,6 +7,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    SelectProps,
     SelectChangeEvent,
 } from '@mui/material';
 
@@ -15,7 +16,7 @@ interface CustomSelectOption {
     value: string;
 }
 
-interface CustomSelectProps {
+interface CustomSelectProps extends SelectProps {
     uniqueId: string; // Unique identifier required for both select and label
     label: string; // Goes in InputLabel component
     options?: CustomSelectOption[]; // Array of options
@@ -23,13 +24,14 @@ interface CustomSelectProps {
     value: string; // The passed state of selected value
     setValue: Dispatch<SetStateAction<string>>; // The setter for value
     fullWidth?: boolean; // Whether or not select should expand to full width
+    disabled?: boolean; // Whether or not the select field is disabled
 }
 
 export default function CustomSelect(props: CustomSelectProps) {
     const labelId = `${props.uniqueId}-label`;
     const selectId = `${props.uniqueId}-select`;
-    const handleChange = (event: SelectChangeEvent<string>) => {
-        props.setValue(event.target.value);
+    const handleChange = (event: SelectChangeEvent<unknown>) => {
+        props.setValue(event.target.value as string);
     };
     const renderOptions = () => {
         if (props.options) {
@@ -51,10 +53,11 @@ export default function CustomSelect(props: CustomSelectProps) {
                 labelId={labelId}
                 id={selectId}
                 name={props.uniqueId}
-                label={props.label}
-                value={props.value}
+                label={props.label} // Handled by {...props}
+                value={props.value} // Handled by {...props}
                 onChange={handleChange}
                 size='small'
+                disabled={props.disabled || false}
             >
                 {renderOptions()}
             </Select>
