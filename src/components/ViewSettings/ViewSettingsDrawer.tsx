@@ -169,8 +169,9 @@ export default function ViewSettingsDrawer(props: ViewSettingsDrawerProps) {
             setFontFormats(props.viewData.fontFormats);
             setFontColor(props.viewData.fontColor);
             setFrequency(props.viewData.frequency);
-            setTargetTime(new Date(props.viewData.targetTime));
+            setDays(props.viewData.days);
             setStartTime(new Date(props.viewData.startTime));
+            setTargetTime(new Date(props.viewData.targetTime));
             setTimeFormat(props.viewData.timeFormat);
             setPublicMode(props.viewData.publicMode);
         }
