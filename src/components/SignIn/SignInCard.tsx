@@ -22,7 +22,7 @@ export default function SignInCard() {
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            height: '20vh', // Set a fixed height or use maxHeight for dynamic sizing
+                            height: '40vh', // Set a fixed height or use maxHeight for dynamic sizing
                             objectFit: 'contain', // Prevents the logo from being cropped
                         }}
                     />
