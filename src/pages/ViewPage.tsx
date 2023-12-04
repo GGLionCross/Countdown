@@ -32,35 +32,47 @@ export default function ViewPage(props: ViewPageProps) {
     const targetTime = props.viewData.targetTime;
     const [timer, setTimer] = useState(0);
 
+    const getTimeFromToday = (dt: Date) => {
+        const now = new Date();
+        now.setHours(
+            dt.getHours(),
+            dt.getMinutes(),
+            dt.getSeconds(),
+            dt.getMilliseconds()
+        );
+        return now;
+    };
+    const changeTimer = (now: Date, start: Date, target: Date) => {
+        const timeLeft = target.getTime() - now.getTime();
+        if (now.getTime() < start.getTime()) {
+            // Don't start until startTime has passed
+            setTimer(target.getTime() - start.getTime());
+        } else if (timeLeft <= 0) {
+            // If the countdown is over, clear the interval
+            setTimer(0);
+        } else {
+            setTimer(timeLeft);
+        }
+    };
+
     useEffect(() => {
+        const startWeeklyTimer = () => {
+            if (days.includes(getToday())) {
+                const now = new Date();
+                const start = getTimeFromToday(new Date(startTime));
+                const target = getTimeFromToday(new Date(targetTime));
+                changeTimer(now, start, target);
+            } else {
+                setTimer(0);
+            }
+        };
+
         // Update the countdown every second
         const intervalId = setInterval(() => {
             // If a weekly countdown is desired
             if (frequency === 'weekly') {
                 // If today is included in the specified days
-                if (days.includes(getToday())) {
-                    const now = new Date();
-                    const start = new Date(startTime);
-                    start.setDate(now.getDate());
-                    const target = new Date(targetTime);
-                    target.setDate(now.getDate());
-
-                    const timeLeft = target.getTime() - now.getTime();
-
-                    if (now.getTime() < start.getTime()) {
-                        // Don't start until startTime has passed
-                        setTimer(target.getTime() - start.getTime());
-                    } else if (timeLeft <= 0) {
-                        // If the countdown is over, clear the interval
-                        clearInterval(intervalId);
-                        setTimer(0);
-                    } else {
-                        setTimer(timeLeft);
-                    }
-                } else {
-                    clearInterval(intervalId);
-                    setTimer(0);
-                }
+                startWeeklyTimer();
             }
         }, 1000); // Update every second
 
