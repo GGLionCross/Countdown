@@ -1,6 +1,18 @@
 {
-  "rules": {
-    ".read": "now < 1701936000000",
-    ".write": "now < 1701936000000"
-  }
+    "rules": {
+        "countdown": {
+            "views": {
+                "$viewId": {
+                    ".read": "data.child('ownerId').val() === auth.uid",
+                    ".write": "data.child('ownerId').val() === auth.uid"
+                }
+            }
+        },
+        "users": {
+            "$uid": {
+                ".read": "$uid === auth.uid",
+                ".write": "$uid === auth.uid"
+            }
+        }
+    }
 }
